@@ -123,6 +123,37 @@ function SuggestionList({ suggestions, onSelect }) {
 }
 
 function AnswerCard({ answer }) {
+  const question = (answer.question || "").toLowerCase();
+  let ctaText = "Try Starred for free \u2192";
+  let ctaVariant = "default";
+  let ctaIcon = "\u2726";
+
+  if (question.includes("confidence") || question.includes("drop") || question.includes("losing")) {
+    ctaText = "See how Starred helps reduce candidate drop-off \u2192";
+    ctaVariant = "risk";
+    ctaIcon = "\u26A0";
+  } else if (
+    question.includes("recruiter") ||
+    question.includes("candidate perception") ||
+    question.includes("gap")
+  ) {
+    ctaText = "See how Starred surfaces perception gaps \u2192";
+    ctaVariant = "gap";
+    ctaIcon = "\u25C8";
+  } else if (
+    question.includes("top") ||
+    question.includes("average") ||
+    question.includes("benchmark")
+  ) {
+    ctaText = "See how Starred benchmarks your hiring performance \u2192";
+    ctaVariant = "benchmark";
+    ctaIcon = "\u25A5";
+  } else if (question.includes("head of talent") || question.includes("prioritize")) {
+    ctaText = "See how Starred helps prioritize TA actions \u2192";
+    ctaVariant = "priority";
+    ctaIcon = "\u2713";
+  }
+
   return React.createElement(
     "section",
     { className: "answer-card" },
@@ -142,12 +173,12 @@ function AnswerCard({ answer }) {
     React.createElement(
       "a",
       {
-        className: "answer-cta",
+        className: `answer-cta answer-cta--${ctaVariant}`,
         href: "https://www.starred.com/request-a-demo",
         target: "_blank",
         rel: "noreferrer",
       },
-      "Try the Starred demo \u2192",
+      `${ctaIcon} ${ctaText}`,
     ),
   );
 }
@@ -203,11 +234,11 @@ function App() {
 
     try {
       const apiAnswer = await fetchBenchmarkAnswer(question);
-      setAnswer(apiAnswer);
+      setAnswer({ ...apiAnswer, question });
     } catch {
       // Keep the experience responsive even if backend isn't available yet.
       await new Promise((resolve) => window.setTimeout(resolve, 900));
-      setAnswer(getAnswerForQuestion(question));
+      setAnswer({ ...getAnswerForQuestion(question), question });
     } finally {
       setIsLoading(false);
     }
