@@ -268,7 +268,7 @@ function App() {
     React.createElement(
       "div",
       { className: "hero-copy" },
-      React.createElement("div", { className: "pill" }, "AI CO-PILOT"),
+      React.createElement("div", { className: "pill" }, "AI CO-PILOT FOR TA"),
       React.createElement(
         "h1",
         null,

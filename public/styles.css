@@ -213,12 +213,13 @@ body {
   min-width: 0;
   border: 0;
   outline: none;
-  font-size: clamp(20px, 2.35vw, 30px);
-  font-weight: 550;
-  letter-spacing: -0.015em;
+  font-size: clamp(16px, 1.75vw, 22px);
+  font-weight: 520;
+  letter-spacing: -0.008em;
   line-height: 1.25;
   color: #253149;
   background: transparent;
+  text-overflow: ellipsis;
 }
 
 .search-wrap input::placeholder {
