@@ -265,6 +265,17 @@ body {
   border-color: #cfd7e4;
 }
 
+.prompt-card {
+  width: 100%;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.prompt-card:focus-visible {
+  outline: 2px solid #8fdcb8;
+  outline-offset: 2px;
+}
+
 .card p {
   margin: 0;
   font-size: 15px;

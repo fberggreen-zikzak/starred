@@ -322,8 +322,14 @@ function App() {
       { className: `questions ${showSuggestions ? "dimmed" : ""}` },
       QUESTION_BANK.slice(0, 5).map((item, idx) =>
         React.createElement(
-          "article",
-          { className: "card", key: item.text },
+          "button",
+          {
+            className: "card prompt-card",
+            key: item.text,
+            type: "button",
+            onClick: () => handleSubmit(item.text),
+            "aria-label": `Use predefined prompt: ${item.text}`,
+          },
           React.createElement(
             "span",
             {
