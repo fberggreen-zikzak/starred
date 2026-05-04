@@ -34,6 +34,7 @@ type RankedChunk = ReportChunk & { score: number };
 
 const reportPath = path.resolve(process.cwd(), "data", "benchmark-report-2026.md");
 let reportChunks: ReportChunk[] = [];
+let reportCacheRaw = "";
 
 const STOPWORDS = new Set([
   "a",
@@ -119,11 +120,14 @@ function chunkReport(markdown: string): ReportChunk[] {
 }
 
 async function ensureReportLoaded(): Promise<void> {
-  if (reportChunks.length > 0) return;
   try {
     const report = await readFile(reportPath, "utf-8");
-    reportChunks = chunkReport(report);
+    if (report !== reportCacheRaw) {
+      reportCacheRaw = report;
+      reportChunks = chunkReport(report);
+    }
   } catch {
+    reportCacheRaw = "";
     reportChunks = [];
   }
 }
@@ -148,12 +152,14 @@ function rankChunks(question: string): RankedChunk[] {
 
 function insufficientAnswer(): AskResponse {
   return {
-    headline: "The 2026 benchmark report does not include enough information.",
+    headline: "The report does not include enough evidence for this question.",
     bullets: [
-      "I could not find strong evidence in the report for this question.",
-      "Try asking about candidate confidence, funnel drop-off, stage experience, or TA team differences.",
+      "I could not find enough relevant benchmark detail to answer confidently.",
+      "Try narrowing the question to a specific stage, metric, or stakeholder comparison.",
+      "Example topics: confidence drop-off, decision speed, recruiter vs candidate perception.",
     ],
-    takeaway: "For TA leaders: use this as a prompt to collect additional internal data before making a decision.",
+    takeaway:
+      "For TA leaders: treat this as a data gap signal and validate with internal pipeline and candidate feedback data.",
   };
 }
 
@@ -185,10 +191,11 @@ function groundedAnswer(question: string, rankedChunks: RankedChunk[]): AskRespo
   }
 
   const dominantHeading = rankedChunks[0]?.heading ?? "Benchmark report";
+  const conciseHeading = dominantHeading.length > 70 ? "Benchmark evidence" : dominantHeading;
   return {
-    headline: `${dominantHeading}: strongest signal from the report`,
+    headline: `${conciseHeading}: key benchmark signal`,
     bullets,
-    takeaway: `For TA leaders: prioritize action in "${dominantHeading}" first, then validate impact with stage-level candidate feedback.`,
+    takeaway: `For TA leaders: prioritize action in "${conciseHeading}" first, then track impact via stage-level candidate sentiment and conversion metrics.`,
   };
 }
 

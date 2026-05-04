@@ -38,34 +38,37 @@ function getAnswerForQuestion(question) {
   const q = question.toLowerCase();
   if (q.includes("confidence") || q.includes("losing") || q.includes("drop")) {
     return {
-      headline: "Confidence drops most after late-stage delays.",
-      stat: "Teams with interview-to-decision times over 10 days see a 21% lower candidate confidence score.",
+      headline: "Late-stage delays are the sharpest confidence risk.",
       bullets: [
-        "Biggest dip appears between final interview and offer communication.",
-        "Fast feedback loops correlate with significantly higher NPS.",
-        "Best-performing teams keep decision latency under 72 hours.",
+        "Confidence drops most between final interview and decision communication.",
+        "Teams with decision latency above 10 days report materially lower candidate trust.",
+        "Faster decision updates consistently correlate with better acceptance outcomes.",
       ],
+      takeaway:
+        "For TA leaders: set a final-stage SLA and enforce manager response times before changing tooling.",
     };
   }
   if (q.includes("top") || q.includes("differ") || q.includes("average")) {
     return {
-      headline: "Top TA teams are faster and more transparent.",
-      stat: "Top quartile organizations close roles 18% faster and deliver 2.1x more proactive status updates.",
+      headline: "Top-performing TA teams win on execution consistency.",
       bullets: [
-        "They standardize SLAs between interview rounds.",
-        "They use clear candidate expectations at each stage.",
-        "They monitor perception gaps monthly, not quarterly.",
+        "They run tighter stage-to-stage SLAs and fewer handoff delays.",
+        "They deliver more proactive candidate communication at each stage.",
+        "They review recruiter-candidate perception gaps monthly and act quickly.",
       ],
+      takeaway:
+        "For TA leaders: prioritize operational discipline first; process clarity drives more uplift than new process complexity.",
     };
   }
   return {
-    headline: "The benchmark points to execution consistency as the biggest lever.",
-    stat: "Organizations with defined stage-level standards outperform peers by 14 points in overall candidate experience.",
+    headline: "Execution consistency is the strongest cross-benchmark lever.",
     bullets: [
-      "Prioritize communication quality in high-friction stages.",
-      "Track drop-off and sentiment together, not separately.",
-      "Focus first on fixes with direct candidate-facing impact.",
+      "Teams with stage-level standards outperform peers on candidate experience.",
+      "The largest performance gaps appear in communication speed and expectation setting.",
+      "Candidate sentiment and funnel conversion move together when stage execution improves.",
     ],
+    takeaway:
+      "For TA leaders: start with one high-friction stage, set clear standards, and track sentiment plus conversion together.",
   };
 }
 
@@ -135,6 +138,16 @@ function AnswerCard({ answer }) {
       { className: "answer-takeaway" },
       React.createElement("strong", null, "Practical takeaway: "),
       answer.takeaway,
+    ),
+    React.createElement(
+      "a",
+      {
+        className: "answer-cta",
+        href: "https://www.starred.com/request-a-demo",
+        target: "_blank",
+        rel: "noreferrer",
+      },
+      "Try the Starred demo \u2192",
     ),
   );
 }
