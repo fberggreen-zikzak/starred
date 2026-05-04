@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "https://esm.sh/react@18.3.1";
+import React, { useEffect, useMemo, useRef, useState } from "https://esm.sh/react@18.3.1";
 import { createRoot } from "https://esm.sh/react-dom@18.3.1/client";
 
 const API_URL = window.AI_ASK_ENDPOINT || "/api/ask";
@@ -190,6 +190,7 @@ function App() {
   const [submittedQuestion, setSubmittedQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [answer, setAnswer] = useState(null);
+  const queryZoneRef = useRef(null);
 
   const isTyping = input.trim().length > 0;
   const isActive = focused || isLoading;
@@ -199,6 +200,22 @@ function App() {
     const timeout = setTimeout(() => setDebouncedInput(input.trim().toLowerCase()), 200);
     return () => clearTimeout(timeout);
   }, [input]);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!queryZoneRef.current) return;
+      if (!queryZoneRef.current.contains(event.target)) {
+        setFocused(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("touchstart", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick);
+    };
+  }, []);
 
   const suggestions = useMemo(() => {
     if (!debouncedInput) return [];
@@ -267,7 +284,7 @@ function App() {
     ),
     React.createElement(
       "div",
-      { className: `query-zone ${isResultsMode ? "results-mode" : ""}` },
+      { className: `query-zone ${isResultsMode ? "results-mode" : ""}`, ref: queryZoneRef },
       React.createElement(
         "form",
         {
