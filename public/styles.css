@@ -1,0 +1,274 @@
+:root {
+  --bg: #f4f6f8;
+  --text: #101118;
+  --muted: #6d7382;
+  --border: #dde2ea;
+  --green: #7ce0b2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.page-bg {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 10% -15%, #dafeea 0, transparent 30%),
+    radial-gradient(circle at 95% 0%, #d8f4ff 0, transparent 28%);
+  pointer-events: none;
+}
+
+.top-nav {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 16px auto 0;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.brand-mark {
+  color: #18b77f;
+  font-size: 20px;
+}
+
+.brand-text {
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a,
+.login {
+  color: #222737;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.demo-btn {
+  border: 0;
+  background: #0f1118;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 11px;
+  padding: 12px 18px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.hero {
+  position: relative;
+  z-index: 1;
+  margin: 64px auto 40px;
+  max-width: 1160px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.pill {
+  display: inline-block;
+  background: #e8faef;
+  border: 1px solid #bceccb;
+  border-radius: 999px;
+  padding: 8px 16px;
+  color: #1f9c69;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+h1 {
+  margin: 20px 0 12px;
+  font-size: clamp(52px, 7vw, 88px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.gradient-word {
+  background: linear-gradient(90deg, #2ecf8f, #3f85ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 26px;
+  line-height: 1.42;
+}
+
+.search-wrap {
+  margin: 40px auto 18px;
+  width: min(840px, 100%);
+  background: #fff;
+  border: 2px solid #95e2bf;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px 8px 22px;
+  box-shadow: 0 8px 26px rgba(58, 103, 76, 0.08);
+}
+
+.search-wrap input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  font-size: 32px;
+  color: #1d2433;
+  background: transparent;
+}
+
+.search-wrap input::placeholder {
+  color: #7c8392;
+}
+
+.send-btn {
+  height: 58px;
+  width: 58px;
+  border-radius: 50%;
+  border: 0;
+  background: #ddf7e9;
+  color: #24b87f;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.try-asking {
+  margin-top: 28px;
+  color: #8d93a2;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.questions {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-align: left;
+  padding: 14px 14px 14px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #2f3648;
+}
+
+.icon {
+  margin-top: 2px;
+  font-size: 18px;
+}
+
+.icon.purple {
+  color: #7e6aff;
+}
+
+.icon.green {
+  color: #2abb7f;
+}
+
+.icon.amber {
+  color: #f6a22e;
+}
+
+.icon.blue {
+  color: #4c8dff;
+}
+
+.icon.pink {
+  color: #ef59be;
+}
+
+.hero-footer {
+  margin-top: 34px;
+  color: #8d94a4;
+  font-size: 18px;
+}
+
+.hero-footer p {
+  margin: 0;
+}
+
+.hero-footer a {
+  display: inline-block;
+  margin-top: 12px;
+  color: #6970f0;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 1120px) {
+  .questions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .subtitle {
+    font-size: 22px;
+  }
+
+  .search-wrap input {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 760px) {
+  .top-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .questions {
+    grid-template-columns: 1fr;
+  }
+}
