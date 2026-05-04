@@ -92,10 +92,18 @@ body {
 .hero {
   position: relative;
   z-index: 1;
-  margin: 64px auto 40px;
-  max-width: 1160px;
+  margin: 56px auto 40px;
+  max-width: 1280px;
   text-align: center;
   padding: 0 24px;
+}
+
+.hero-copy {
+  max-width: 980px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pill {
@@ -110,11 +118,14 @@ body {
   letter-spacing: 0.06em;
 }
 
-h1 {
-  margin: 20px 0 12px;
-  font-size: clamp(52px, 7vw, 88px);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
+.hero h1 {
+  margin: 16px 0 14px;
+  max-width: 980px;
+  font-size: clamp(42px, 5.8vw, 72px);
+  line-height: 1.04;
+  letter-spacing: -0.028em;
+  font-weight: 800;
+  text-wrap: balance;
 }
 
 .gradient-word {
@@ -126,13 +137,16 @@ h1 {
 
 .subtitle {
   margin: 0;
+  max-width: 760px;
   color: var(--muted);
-  font-size: 26px;
-  line-height: 1.42;
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.36;
+  letter-spacing: -0.008em;
+  text-wrap: balance;
 }
 
 .search-wrap {
-  margin: 40px auto 18px;
+  margin: 36px auto 16px;
   width: min(840px, 100%);
   background: #fff;
   border: 2px solid #95e2bf;
@@ -145,9 +159,10 @@ h1 {
 
 .search-wrap input {
   flex: 1;
+  min-width: 0;
   border: 0;
   outline: none;
-  font-size: 32px;
+  font-size: clamp(18px, 2.2vw, 24px);
   color: #1d2433;
   background: transparent;
 }
@@ -168,17 +183,18 @@ h1 {
 }
 
 .try-asking {
-  margin-top: 28px;
+  margin-top: 24px;
   color: #8d93a2;
   font-size: 24px;
   font-weight: 500;
+  line-height: 1.2;
 }
 
 .questions {
   margin-top: 22px;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(5, minmax(190px, 1fr));
+  gap: 16px;
 }
 
 .card {
@@ -188,20 +204,22 @@ h1 {
   text-align: left;
   padding: 14px 14px 14px 12px;
   display: flex;
-  gap: 10px;
+  gap: 7px;
   align-items: flex-start;
+  min-height: 112px;
 }
 
 .card p {
   margin: 0;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.42;
   color: #2f3648;
 }
 
 .icon {
-  margin-top: 2px;
-  font-size: 18px;
+  margin-top: 1px;
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
 .icon.purple {
@@ -243,20 +261,64 @@ h1 {
 }
 
 @media (max-width: 1120px) {
+  .hero {
+    margin-top: 48px;
+  }
+
+  .hero h1 {
+    max-width: 720px;
+    line-height: 1.06;
+    margin: 14px 0 14px;
+  }
+
   .questions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
   }
 
   .subtitle {
+    max-width: 680px;
     font-size: 22px;
+    line-height: 1.4;
   }
 
   .search-wrap input {
-    font-size: 22px;
+    font-size: 20px;
   }
 }
 
 @media (max-width: 760px) {
+  .hero {
+    margin-top: 40px;
+    padding: 0 16px;
+  }
+
+  .hero h1 {
+    margin: 12px 0 12px;
+    font-size: clamp(42px, 12vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    max-width: 100%;
+    font-size: 18px;
+    line-height: 1.45;
+  }
+
+  .search-wrap {
+    margin-top: 24px;
+    padding-left: 16px;
+  }
+
+  .search-wrap input {
+    font-size: 16px;
+  }
+
+  .try-asking {
+    margin-top: 18px;
+    font-size: 20px;
+  }
+
   .top-nav {
     flex-wrap: wrap;
     justify-content: center;
