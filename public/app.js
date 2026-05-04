@@ -347,7 +347,15 @@ function App() {
       "footer",
       { className: "hero-footer" },
       React.createElement("p", null, "Ready to ask better questions about your hiring experience?"),
-      React.createElement("a", { href: "#" }, "See Starred AI Co-Pilot in action \u2192"),
+      React.createElement(
+        "a",
+        {
+          href: "https://www.starred.com/request-a-demo",
+          target: "_blank",
+          rel: "noreferrer",
+        },
+        "See Starred AI Co-Pilot in action \u2192",
+      ),
     ),
   );
 }
