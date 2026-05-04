@@ -72,11 +72,11 @@ function getAnswerForQuestion(question) {
 function normalizeApiAnswer(payload) {
   if (!payload || typeof payload !== "object") return null;
   const headline = payload.headline || payload.title || payload.insight;
-  const stat = payload.stat || payload.supportingStat || payload.summary;
   const bullets = Array.isArray(payload.bullets) ? payload.bullets : payload.points;
+  const takeaway = payload.takeaway || payload.action || payload.nextStep;
 
-  if (!headline || !stat || !Array.isArray(bullets)) return null;
-  return { headline, stat, bullets: bullets.slice(0, 4) };
+  if (!headline || !Array.isArray(bullets) || !takeaway) return null;
+  return { headline, bullets: bullets.slice(0, 3), takeaway };
 }
 
 async function fetchBenchmarkAnswer(question) {
@@ -125,11 +125,16 @@ function AnswerCard({ answer }) {
     { className: "answer-card" },
     React.createElement("p", { className: "answer-label" }, "Benchmark answer"),
     React.createElement("h3", { className: "answer-headline" }, answer.headline),
-    React.createElement("p", { className: "answer-stat" }, answer.stat),
     React.createElement(
       "ul",
       { className: "answer-list" },
       answer.bullets.map((item) => React.createElement("li", { key: item }, item)),
+    ),
+    React.createElement(
+      "p",
+      { className: "answer-takeaway" },
+      React.createElement("strong", null, "Practical takeaway: "),
+      answer.takeaway,
     ),
   );
 }
@@ -143,7 +148,7 @@ function App() {
   const [answer, setAnswer] = useState(null);
 
   const isTyping = input.trim().length > 0;
-  const isActive = focused || isTyping;
+  const isActive = focused || isLoading;
   const isResultsMode = Boolean(submittedQuestion);
 
   useEffect(() => {
@@ -170,6 +175,9 @@ function App() {
       .sort((a, b) => b.score - a.score)
       .slice(0, 5);
   }, [debouncedInput]);
+
+  const showSuggestions = focused && isTyping && !isLoading && suggestions.length > 0;
+  const showHelper = focused && isTyping;
 
   const handleSubmit = (value) => {
     void (async () => {
@@ -243,10 +251,9 @@ function App() {
           "\u27A4",
         ),
       ),
-      isTyping &&
+      showHelper &&
         React.createElement("p", { className: "helper-text" }, "Based on 2026 Benchmark data"),
-      isTyping &&
-        suggestions.length > 0 &&
+      showSuggestions &&
         React.createElement(SuggestionList, {
           suggestions,
           onSelect: (text) => handleSubmit(text),
@@ -263,12 +270,12 @@ function App() {
     ),
     React.createElement(
       "div",
-      { className: `try-asking ${isActive ? "dimmed" : ""}` },
+      { className: `try-asking ${showSuggestions ? "dimmed" : ""}` },
       "Try asking:",
     ),
     React.createElement(
       "section",
-      { className: `questions ${isActive ? "dimmed" : ""}` },
+      { className: `questions ${showSuggestions ? "dimmed" : ""}` },
       QUESTION_BANK.slice(0, 5).map((item, idx) =>
         React.createElement(
           "article",

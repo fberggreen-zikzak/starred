@@ -19,45 +19,176 @@ const mimeTypes: Record<string, string> = {
 
 type AskResponse = {
   headline: string;
-  stat: string;
   bullets: string[];
+  takeaway: string;
 };
 
-function buildAnswer(question: string): AskResponse {
-  const q = question.toLowerCase();
+type ReportChunk = {
+  id: string;
+  heading: string;
+  text: string;
+  tokens: string[];
+};
 
-  if (q.includes("confidence") || q.includes("drop") || q.includes("losing")) {
-    return {
-      headline: "Candidate confidence drops most after late-stage delays.",
-      stat: "Teams with interview-to-decision times above 10 days score 21% lower on confidence.",
-      bullets: [
-        "The steepest decline appears between final interview and decision communication.",
-        "Top-performing teams keep final-stage response times under 72 hours.",
-        "Proactive status updates are the strongest confidence stabilizer.",
-      ],
-    };
+type RankedChunk = ReportChunk & { score: number };
+
+const reportPath = path.resolve(process.cwd(), "data", "benchmark-report-2026.md");
+let reportChunks: ReportChunk[] = [];
+
+const STOPWORDS = new Set([
+  "a",
+  "an",
+  "and",
+  "are",
+  "as",
+  "at",
+  "be",
+  "by",
+  "for",
+  "from",
+  "how",
+  "in",
+  "is",
+  "it",
+  "of",
+  "on",
+  "or",
+  "that",
+  "the",
+  "to",
+  "what",
+  "which",
+  "who",
+  "with",
+  "year",
+]);
+
+function toTokens(text: string): string[] {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((token) => token.length > 2 && !STOPWORDS.has(token));
+}
+
+function sentenceList(text: string): string[] {
+  return text
+    .split(/(?<=[.?!])\s+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 35);
+}
+
+function chunkReport(markdown: string): ReportChunk[] {
+  const lines = markdown.split(/\r?\n/);
+  let currentHeading = "Benchmark report";
+  const chunks: ReportChunk[] = [];
+  let paragraphBuffer: string[] = [];
+  let chunkId = 0;
+
+  const flushParagraph = () => {
+    const paragraph = paragraphBuffer.join(" ").trim();
+    paragraphBuffer = [];
+    if (!paragraph) return;
+    const combined = `${currentHeading}. ${paragraph}`;
+    chunks.push({
+      id: `chunk-${chunkId++}`,
+      heading: currentHeading,
+      text: paragraph,
+      tokens: toTokens(combined),
+    });
+  };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flushParagraph();
+      continue;
+    }
+
+    if (trimmed.startsWith("#")) {
+      flushParagraph();
+      currentHeading = trimmed.replace(/^#+\s*/, "").trim() || currentHeading;
+      continue;
+    }
+
+    paragraphBuffer.push(trimmed);
   }
 
-  if (q.includes("top") || q.includes("average") || q.includes("differ")) {
-    return {
-      headline: "Top TA teams outperform through consistency, not volume.",
-      stat: "Top quartile teams close roles 18% faster and maintain 2.1x more stage-level communication touchpoints.",
-      bullets: [
-        "They enforce clear SLAs between interview rounds.",
-        "They standardize candidate messaging quality across hiring managers.",
-        "They review perception gaps monthly and act within the same quarter.",
-      ],
-    };
-  }
+  flushParagraph();
+  return chunks;
+}
 
+async function ensureReportLoaded(): Promise<void> {
+  if (reportChunks.length > 0) return;
+  try {
+    const report = await readFile(reportPath, "utf-8");
+    reportChunks = chunkReport(report);
+  } catch {
+    reportChunks = [];
+  }
+}
+
+function rankChunks(question: string): RankedChunk[] {
+  const queryTokens = toTokens(question);
+  if (queryTokens.length === 0) return [];
+
+  return reportChunks
+    .map((chunk) => {
+      let score = 0;
+      for (const token of queryTokens) {
+        if (chunk.tokens.includes(token)) score += 2;
+        if (chunk.heading.toLowerCase().includes(token)) score += 1;
+      }
+      return { ...chunk, score };
+    })
+    .filter((chunk) => chunk.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4);
+}
+
+function insufficientAnswer(): AskResponse {
   return {
-    headline: "Execution discipline is the strongest benchmark differentiator.",
-    stat: "Organizations with stage-level standards outperform peers by 14 points in overall candidate experience.",
+    headline: "The 2026 benchmark report does not include enough information.",
     bullets: [
-      "Prioritize fixes in stages with high drop-off and low confidence.",
-      "Track sentiment alongside conversion, not in separate views.",
-      "Focus on communication quality before introducing new tooling.",
+      "I could not find strong evidence in the report for this question.",
+      "Try asking about candidate confidence, funnel drop-off, stage experience, or TA team differences.",
     ],
+    takeaway: "For TA leaders: use this as a prompt to collect additional internal data before making a decision.",
+  };
+}
+
+function groundedAnswer(question: string, rankedChunks: RankedChunk[]): AskResponse {
+  if (rankedChunks.length === 0) return insufficientAnswer();
+
+  const queryTokens = toTokens(question);
+  const candidateSentences = rankedChunks.flatMap((chunk) =>
+    sentenceList(chunk.text).map((sentence) => {
+      const sentenceTokens = toTokens(sentence);
+      const overlap = queryTokens.filter((token) => sentenceTokens.includes(token)).length;
+      return {
+        sentence,
+        overlap,
+        heading: chunk.heading,
+      };
+    }),
+  );
+
+  const bullets = candidateSentences
+    .filter((item) => item.overlap > 0)
+    .sort((a, b) => b.overlap - a.overlap)
+    .map((item) => item.sentence)
+    .filter((sentence, index, arr) => arr.indexOf(sentence) === index)
+    .slice(0, 3);
+
+  if (bullets.length < 2) {
+    return insufficientAnswer();
+  }
+
+  const dominantHeading = rankedChunks[0]?.heading ?? "Benchmark report";
+  return {
+    headline: `${dominantHeading}: strongest signal from the report`,
+    bullets,
+    takeaway: `For TA leaders: prioritize action in "${dominantHeading}" first, then validate impact with stage-level candidate feedback.`,
   };
 }
 
@@ -78,6 +209,7 @@ const server = createServer(async (req, res) => {
 
   if (pathname === "/api/ask" && req.method === "POST") {
     try {
+      await ensureReportLoaded();
       const body = (await readJsonBody(req)) as { question?: unknown };
       const question = typeof body.question === "string" ? body.question.trim() : "";
 
@@ -87,7 +219,8 @@ const server = createServer(async (req, res) => {
         return;
       }
 
-      const answer = buildAnswer(question);
+      const ranked = rankChunks(question);
+      const answer = groundedAnswer(question, ranked);
       res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
       res.end(JSON.stringify(answer));
       return;
