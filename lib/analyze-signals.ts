@@ -162,7 +162,13 @@ function fallbackSnapshot(signals: ExtractedSignals): SnapshotResult {
   };
 }
 
-export async function buildSnapshot(signals: ExtractedSignals): Promise<SnapshotResult> {
+type BuildSnapshotOptions = {
+  observedOnly?: boolean;
+};
+
+export async function buildSnapshot(signals: ExtractedSignals, options: BuildSnapshotOptions = {}): Promise<SnapshotResult> {
+  if (options.observedOnly) return fallbackSnapshot(signals);
+
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return fallbackSnapshot(signals);
 

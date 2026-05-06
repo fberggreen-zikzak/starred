@@ -21719,7 +21719,7 @@ var require_jsx_runtime = __commonJS({
 
 // src/webapp/main.tsx
 var import_client = __toESM(require_client(), 1);
-var import_react3 = __toESM(require_react(), 1);
+var import_react4 = __toESM(require_react(), 1);
 
 // src/webapp/components/AnalyzerForm.tsx
 var import_react = __toESM(require_react(), 1);
@@ -21816,6 +21816,9 @@ function AnalyzerForm({ onSubmit }) {
   ] }) });
 }
 
+// src/webapp/components/AnalysisReport.tsx
+var import_react2 = __toESM(require_react(), 1);
+
 // src/webapp/components/CTASection.tsx
 var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
 function CTASection() {
@@ -21851,6 +21854,7 @@ function InsightCard({ title, badge, icon, children }) {
 // src/webapp/components/AnalysisReport.tsx
 var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
 function AnalysisReport({ report, onReset }) {
+  const [copied, setCopied] = (0, import_react2.useState)(false);
   function directionSymbol(direction) {
     if (direction === "up") return "\u2191";
     if (direction === "down") return "\u2193";
@@ -21864,17 +21868,36 @@ function AnalysisReport({ report, onReset }) {
     if (status === "Near benchmark") return "text-cyan-700 bg-cyan-50 border-cyan-200";
     return "text-amber-700 bg-amber-50 border-amber-200";
   }
+  async function handleShareReport() {
+    const shareUrl = window.location.href;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  }
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "mx-auto mt-8 w-full max-w-5xl space-y-5 md:space-y-6", children: [
     /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm ring-1 ring-emerald-100/60", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "mb-3", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+        "button",
+        {
+          type: "button",
+          onClick: onReset,
+          className: "rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50",
+          children: "Go back"
+        }
+      ) }),
       /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex flex-wrap items-center justify-between gap-3", children: [
         /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-xs font-semibold uppercase tracking-wide text-emerald-700", children: "Hiring Experience Snapshot" }),
         /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
-            onClick: onReset,
+            onClick: handleShareReport,
             className: "rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50",
-            children: "Analyze another URL"
+            children: copied ? "Report URL copied" : "Share report"
           }
         )
       ] }),
@@ -21951,7 +21974,7 @@ function Hero() {
 }
 
 // src/webapp/components/LoadingState.tsx
-var import_react2 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
 
 // src/webapp/data.ts
 var LOADING_STEPS = [
@@ -21964,8 +21987,8 @@ var LOADING_STEPS = [
 // src/webapp/components/LoadingState.tsx
 var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
 function LoadingState() {
-  const [stepIndex, setStepIndex] = (0, import_react2.useState)(0);
-  (0, import_react2.useEffect)(() => {
+  const [stepIndex, setStepIndex] = (0, import_react3.useState)(0);
+  (0, import_react3.useEffect)(() => {
     const interval = window.setInterval(() => {
       setStepIndex((prev) => (prev + 1) % LOADING_STEPS.length);
     }, 650);
@@ -21979,180 +22002,81 @@ function LoadingState() {
   ] });
 }
 
-// src/webapp/mockAnalysis.ts
-function hashValue(input) {
-  let hash = 0;
-  for (let i = 0; i < input.length; i += 1) {
-    hash = (hash << 5) - hash + input.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-function scoreLabel(score) {
-  if (score >= 72) return "Strong";
-  if (score >= 52) return "Mixed";
-  return "At Risk";
-}
-function statusFromScore(score) {
-  if (score >= 72) return "Above benchmark";
-  if (score >= 55) return "Near benchmark";
-  return "Below benchmark";
-}
-function atsSignal(ats) {
-  switch (ats) {
-    case "Workday":
-      return {
-        scoreDelta: -10,
-        insight: "Application process may indicate higher complexity in early stages.",
-        risk: "Application experience appears to carry higher drop-off risk when forms are lengthy."
-      };
-    case "Greenhouse":
-    case "Lever":
-      return {
-        scoreDelta: 6,
-        insight: "Current setup suggests a strong process foundation for structured hiring.",
-        risk: "Experience visibility may remain limited without stage-level sentiment measurement."
-      };
-    case "SmartRecruiters":
-      return {
-        scoreDelta: 3,
-        insight: "Pipeline visibility appears relatively strong across open roles.",
-        risk: "Experience layer may be less explicit unless candidate feedback loops are active."
-      };
-    case "iCIMS":
-      return {
-        scoreDelta: -2,
-        insight: "Process governance appears established, with room for clearer candidate touchpoints.",
-        risk: "Communication consistency may vary between teams if ownership is distributed."
-      };
-    case "Jobvite":
-      return {
-        scoreDelta: 1,
-        insight: "Hiring workflows suggest practical structure with moderate flexibility.",
-        risk: "Interview consistency may depend on how teams calibrate feedback expectations."
-      };
-    default:
-      return {
-        scoreDelta: -4,
-        insight: "Public setup signals are mixed, which can make candidate expectations harder to set.",
-        risk: "Without clear process signals, communication expectations may appear ambiguous."
-      };
-  }
-}
-function generateSnapshot(input) {
-  const seed = hashValue(`${input.careerPageUrl}|${input.companyName}|${input.companyWebsite}|${input.ats}`);
-  const base = 56 + seed % 22;
-  const ats = atsSignal(input.ats);
-  const score = Math.max(32, Math.min(92, base + ats.scoreDelta));
-  const signalLabel = scoreLabel(score);
-  const logoText = input.companyName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join("");
-  const signalInterpretation = signalLabel === "Strong" ? "Relatively clear visibility across candidate touchpoints, with some opportunities to tighten consistency." : signalLabel === "Mixed" ? "Mixed visibility across candidate touchpoints, with opportunity to improve communication clarity." : "Early signals suggest meaningful gaps in candidate-facing clarity across stages.";
-  const benchmarkPosition = signalLabel === "Strong" ? "Around top-performing TA teams on public communication signals" : signalLabel === "Mixed" ? "Below top-performing TA teams on communication clarity" : "Behind common benchmark patterns for candidate expectation-setting";
-  const communicationClarity = Math.max(35, Math.min(90, score - 6));
-  const processTransparency = Math.max(35, Math.min(90, score - 4));
-  const candidateTrustSignals = Math.max(35, Math.min(90, score - 7));
-  const interviewCoordination = Math.max(35, Math.min(90, score - 5));
-  const hiringConsistency = Math.max(35, Math.min(90, score - 3));
-  return {
-    careerPageUrl: input.careerPageUrl,
-    companyName: input.companyName,
-    companyWebsite: input.companyWebsite,
-    ats: input.ats,
-    companyLogoText: logoText || "CO",
-    hiringMaturityLabel: signalLabel === "Strong" ? "Mature hiring signal profile" : signalLabel === "Mixed" ? "Developing hiring signal profile" : "Early-stage hiring signal profile",
-    benchmarkComparisonLabel: signalLabel === "Strong" ? "Above benchmark on candidate-facing consistency" : signalLabel === "Mixed" ? "Near benchmark, with communication gaps" : "Below benchmark on communication clarity",
-    benchmarkCohortSimilarity: `${72 + seed % 18}% similarity to enterprise TA benchmark cohort`,
-    signalLabel,
-    signalInterpretation,
-    benchmarkPosition,
-    executiveSummary: `${input.companyName} shows signals of hiring maturity, but benchmark evidence suggests candidate trust may weaken during interview-stage handoffs and communication gaps between stages.`,
-    signalScores: [
-      {
-        name: "Communication clarity",
-        score: communicationClarity,
-        status: statusFromScore(communicationClarity)
-      },
-      {
-        name: "Process transparency",
-        score: processTransparency,
-        status: statusFromScore(processTransparency)
-      },
-      {
-        name: "Candidate trust signals",
-        score: candidateTrustSignals,
-        status: statusFromScore(candidateTrustSignals)
-      },
-      {
-        name: "Interview coordination",
-        score: interviewCoordination,
-        status: statusFromScore(interviewCoordination)
-      },
-      {
-        name: "Hiring consistency",
-        score: hiringConsistency,
-        status: statusFromScore(hiringConsistency)
-      }
-    ],
-    observedSignals: [
-      "No visible interview timeline expectations.",
-      "Limited recruiter ownership clarity across public touchpoints.",
-      "Careers page appears to include limited process transparency.",
-      "Candidate preparation guidance is not clearly surfaced.",
-      "ATS flow appears optimized for speed over transparency."
-    ],
-    benchmarkComparison: [
-      {
-        metric: "Communication transparency",
-        direction: "down",
-        label: "Below benchmark"
-      },
-      {
-        metric: "Application simplicity",
-        direction: "flat",
-        label: "Near benchmark"
-      },
-      {
-        metric: "Employer branding consistency",
-        direction: "up",
-        label: "Above benchmark"
-      }
-    ],
-    trustMoments: [
-      "After application submission",
-      "Between interview rounds",
-      "Post-final interview communication"
-    ],
-    frictionSignals: [
-      "Candidates may struggle to understand what happens between interview stages and when to expect updates.",
-      `The hiring journey appears structured operationally (${ats.insight.toLowerCase()}), but expectation-setting may vary across touchpoints.`,
-      "Public signals suggest limited visibility into how candidates experience the process after applying."
-    ],
-    whyThisMatters: [
-      "Lower candidate confidence late-stage",
-      "Inconsistent recruiter follow-up",
-      "Increased drop-off after interviews",
-      "Weaker employer brand trust"
-    ],
-    priorities: [
-      "Improve interview timeline transparency",
-      "Reduce silence between interview rounds",
-      "Clarify recruiter ownership",
-      "Set candidate expectations earlier"
-    ]
-  };
-}
-
 // src/webapp/main.tsx
 var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+function toAtsOption(value) {
+  if (value === "Greenhouse" || value === "Lever" || value === "Workday" || value === "SmartRecruiters" || value === "iCIMS" || value === "Jobvite") {
+    return value;
+  }
+  return "Other / Not sure";
+}
+function toSignalLabel(score) {
+  if (score >= 72) return "Strong";
+  if (score >= 54) return "Mixed";
+  return "At Risk";
+}
+function toDirection(symbol) {
+  if (symbol === "\u2191") return "up";
+  if (symbol === "\u2193") return "down";
+  return "flat";
+}
+function buildReportFromSnapshot(snapshot) {
+  const avgScore = Math.round(snapshot.scorecards.reduce((sum, card) => sum + card.score, 0) / Math.max(1, snapshot.scorecards.length));
+  const signalLabel = toSignalLabel(avgScore);
+  const logoText = snapshot.companyName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join("") || "CO";
+  return {
+    careerPageUrl: snapshot.careerPageUrl,
+    companyName: snapshot.companyName,
+    companyWebsite: new URL(snapshot.careerPageUrl).origin,
+    ats: toAtsOption(snapshot.atsProvider),
+    companyLogoText: logoText,
+    hiringMaturityLabel: `${snapshot.hiringMaturity} hiring signal profile`,
+    benchmarkComparisonLabel: signalLabel === "Strong" ? "Above benchmark on observed public hiring signals" : signalLabel === "Mixed" ? "Near benchmark on observed public hiring signals" : "Below benchmark on observed public hiring signals",
+    benchmarkCohortSimilarity: snapshot.benchmarkSimilarity,
+    signalLabel,
+    signalInterpretation: "Scores are directional and computed only from observed public career-page signals.",
+    benchmarkPosition: "Based on observed public evidence only",
+    executiveSummary: snapshot.executiveSummary,
+    signalScores: snapshot.scorecards.map((item) => ({
+      name: item.name,
+      score: item.score,
+      status: item.benchmark
+    })),
+    observedSignals: snapshot.observedPublicSignals,
+    benchmarkComparison: snapshot.benchmarkComparison.map((item) => ({
+      metric: item.metric,
+      direction: toDirection(item.symbol),
+      label: item.position
+    })),
+    trustMoments: snapshot.trustMoments,
+    frictionSignals: snapshot.potentialGaps,
+    whyThisMatters: snapshot.strengths,
+    priorities: snapshot.recommendedFocusAreas
+  };
+}
 function App() {
-  const [state, setState] = (0, import_react3.useState)("idle");
-  const [report, setReport] = (0, import_react3.useState)(null);
-  function handleGenerate(input) {
+  const [state, setState] = (0, import_react4.useState)("idle");
+  const [report, setReport] = (0, import_react4.useState)(null);
+  const [error, setError] = (0, import_react4.useState)(null);
+  async function handleGenerate(input) {
     setState("loading");
-    window.setTimeout(() => {
-      setReport(generateSnapshot(input));
+    setError(null);
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: input.careerPageUrl, observedOnly: true })
+      });
+      const payload = await response.json();
+      if (!response.ok || !("snapshot" in payload)) {
+        throw new Error("error" in payload && payload.error ? payload.error : "Unable to analyze career page.");
+      }
+      setReport(buildReportFromSnapshot(payload.snapshot));
       setState("report");
-    }, 2e3);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to analyze career page.");
+      setState("idle");
+    }
   }
   function handleReset() {
     setReport(null);
@@ -22163,6 +22087,7 @@ function App() {
     state !== "report" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Hero, {}),
     state === "idle" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AnalyzerForm, { onSubmit: handleGenerate }),
     state === "loading" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LoadingState, {}),
+    state === "idle" && error && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "mx-auto mt-4 max-w-4xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700", children: error }),
     state === "report" && report && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AnalysisReport, { report, onReset: handleReset })
   ] }) });
 }

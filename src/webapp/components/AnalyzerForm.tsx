@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { FormData } from "../types";
 
 type AnalyzerFormProps = {
-  onSubmit: (payload: FormData) => void;
+  onSubmit: (payload: FormData) => void | Promise<void>;
 };
 
 export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {

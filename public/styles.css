@@ -411,13 +411,13 @@ body {
   justify-content: center;
   text-decoration: none;
   text-align: center;
-  min-height: 64px;
-  border-radius: 20px;
-  padding: 14px 20px;
+  min-height: 52px;
+  border-radius: 16px;
+  padding: 10px 16px;
   background: linear-gradient(135deg, #ffffff 0%, #f8fbff 50%, #f2f7ff 100%);
   color: #1e2a44;
   font-weight: 700;
-  font-size: clamp(15px, 1.4vw, 20px);
+  font-size: clamp(14px, 1.1vw, 18px);
   line-height: 1.2;
   letter-spacing: -0.015em;
   border: 1px solid #d9e4f2;
@@ -1103,8 +1103,8 @@ body {
   .page-switch-btn {
     width: 100%;
     max-width: none;
-    min-height: 56px;
-    font-size: 16px;
+    min-height: 48px;
+    font-size: 15px;
   }
 
   .site-footer {

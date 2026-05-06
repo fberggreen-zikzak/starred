@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SnapshotReport } from "../types";
 import { CTASection } from "./CTASection";
 import { InsightCard } from "./InsightCard";
@@ -8,6 +9,8 @@ type AnalysisReportProps = {
 };
 
 export function AnalysisReport({ report, onReset }: AnalysisReportProps): JSX.Element {
+  const [copied, setCopied] = useState(false);
+
   function directionSymbol(direction: "up" | "flat" | "down"): string {
     if (direction === "up") return "↑";
     if (direction === "down") return "↓";
@@ -24,17 +27,37 @@ export function AnalysisReport({ report, onReset }: AnalysisReportProps): JSX.El
     return "text-amber-700 bg-amber-50 border-amber-200";
   }
 
+  async function handleShareReport(): Promise<void> {
+    const shareUrl = window.location.href;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  }
+
   return (
     <section className="mx-auto mt-8 w-full max-w-5xl space-y-5 md:space-y-6">
       <div className="rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm ring-1 ring-emerald-100/60">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Hiring Experience Snapshot</p>
+        <div className="mb-3">
           <button
             type="button"
             onClick={onReset}
             className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
           >
-            Analyze another URL
+            Go back
+          </button>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Hiring Experience Snapshot</p>
+          <button
+            type="button"
+            onClick={handleShareReport}
+            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            {copied ? "Report URL copied" : "Share report"}
           </button>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-4">
