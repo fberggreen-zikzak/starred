@@ -398,27 +398,43 @@ body {
 }
 
 .page-switcher {
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
+  width: min(1040px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 12px;
 }
 
 .page-switcher .page-switch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
-  border-radius: 12px;
-  padding: 11px 15px;
+  text-align: center;
+  min-height: 64px;
+  border-radius: 18px;
+  padding: 12px 18px;
   background: #fff;
   color: #24304b;
   font-weight: 700;
+  font-size: clamp(15px, 1.4vw, 20px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   border: 1px solid #d0d8e5;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .page-switcher .page-switch-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 16px rgba(36, 48, 75, 0.1);
+  border-color: #b8c9df;
+  box-shadow: 0 10px 20px rgba(36, 48, 75, 0.1);
   color: #24304b;
+}
+
+.page-switcher .page-switch-btn:focus-visible {
+  outline: 2px solid #8edabc;
+  outline-offset: 2px;
 }
 
 .page-switcher .page-switch-btn.is-active {
@@ -1070,12 +1086,14 @@ body {
   }
 
   .page-switcher {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .page-switch-btn {
     width: 100%;
-    max-width: 340px;
+    max-width: none;
+    min-height: 56px;
+    font-size: 16px;
   }
 
   .site-footer {

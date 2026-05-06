@@ -21719,7 +21719,7 @@ var require_jsx_runtime = __commonJS({
 
 // src/webapp/main.tsx
 var import_client = __toESM(require_client(), 1);
-var import_react4 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
 
 // src/webapp/components/AnalyzerForm.tsx
 var import_react = __toESM(require_react(), 1);
@@ -21822,12 +21822,20 @@ function CTASection() {
   return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "mt-8 rounded-3xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-cyan-50 p-7 shadow-sm md:p-9", children: [
     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "text-2xl font-semibold text-slate-900", children: "Now imagine asking the same questions about your own hiring experience." }),
     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "mt-3 max-w-3xl text-slate-700", children: "Starred AI Co-Pilot helps TA teams uncover candidate friction, recruiter bottlenecks, hiring manager trends, and experience risks directly from their own hiring data." }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "mt-5 inline-flex items-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800", children: "See Starred AI Co-Pilot \u2192" })
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+      "a",
+      {
+        href: "https://www.starred.com/demo",
+        target: "_blank",
+        rel: "noreferrer",
+        className: "mt-5 inline-flex items-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800",
+        children: "See Starred AI Co-Pilot \u2192"
+      }
+    )
   ] });
 }
 
 // src/webapp/components/InsightCard.tsx
-var import_react2 = __toESM(require_react(), 1);
 var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
 function InsightCard({ title, badge, icon, children }) {
   return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("article", { className: "rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-100", children: [
@@ -21943,7 +21951,7 @@ function Hero() {
 }
 
 // src/webapp/components/LoadingState.tsx
-var import_react3 = __toESM(require_react(), 1);
+var import_react2 = __toESM(require_react(), 1);
 
 // src/webapp/data.ts
 var LOADING_STEPS = [
@@ -21956,8 +21964,8 @@ var LOADING_STEPS = [
 // src/webapp/components/LoadingState.tsx
 var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
 function LoadingState() {
-  const [stepIndex, setStepIndex] = (0, import_react3.useState)(0);
-  (0, import_react3.useEffect)(() => {
+  const [stepIndex, setStepIndex] = (0, import_react2.useState)(0);
+  (0, import_react2.useEffect)(() => {
     const interval = window.setInterval(() => {
       setStepIndex((prev) => (prev + 1) % LOADING_STEPS.length);
     }, 650);
@@ -22137,8 +22145,8 @@ function generateSnapshot(input) {
 // src/webapp/main.tsx
 var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
 function App() {
-  const [state, setState] = (0, import_react4.useState)("idle");
-  const [report, setReport] = (0, import_react4.useState)(null);
+  const [state, setState] = (0, import_react3.useState)("idle");
+  const [report, setReport] = (0, import_react3.useState)(null);
   function handleGenerate(input) {
     setState("loading");
     window.setTimeout(() => {

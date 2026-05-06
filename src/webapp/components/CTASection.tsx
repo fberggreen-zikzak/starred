@@ -8,9 +8,14 @@ export function CTASection(): JSX.Element {
         Starred AI Co-Pilot helps TA teams uncover candidate friction, recruiter bottlenecks, hiring manager trends,
         and experience risks directly from their own hiring data.
       </p>
-      <button className="mt-5 inline-flex items-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
+      <a
+        href="https://www.starred.com/demo"
+        target="_blank"
+        rel="noreferrer"
+        className="mt-5 inline-flex items-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+      >
         See Starred AI Co-Pilot →
-      </button>
+      </a>
     </section>
   );
 }
