@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { chromium, type Browser, type BrowserContext } from "playwright";
 import * as cheerio from "cheerio";
 import { ExtractedSignals } from "./analyzer-types";
 
@@ -89,21 +89,31 @@ function discoverAtsUrlsFromHtml(html: string, sourceUrl: string): string[] {
 }
 
 async function tryPlaywrightHtml(url: string): Promise<string | null> {
-  let browser: Awaited<ReturnType<typeof chromium.launch>> | null = null;
+  let browser: Browser | null = null;
+  let context: BrowserContext | null = null;
   try {
     browser = await chromium.launch({ headless: true });
-    const context = await browser.newContext({ userAgent: USER_AGENT });
+    context = await browser.newContext({ userAgent: USER_AGENT });
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 12000 });
-    const html = await page.content();
-    await context.close();
-    await browser.close();
-    return html;
+    return await page.content();
   } catch {
-    if (browser) {
-      await browser.close();
-    }
     return null;
+  } finally {
+    if (context) {
+      try {
+        await context.close();
+      } catch {
+        // Ignore browser context shutdown errors
+      }
+    }
+    if (browser) {
+      try {
+        await browser.close();
+      } catch {
+        // Ignore browser shutdown errors
+      }
+    }
   }
 }
 
