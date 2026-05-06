@@ -25,40 +25,118 @@ Output strict JSON with keys:
 executiveSummary, strengths, potentialGaps, trustMoments, benchmarkComparison, recommendedFocusAreas, scorecards, hiringMaturity, benchmarkCohort.
 `;
 
+function clampScore(value: number): number {
+  return Math.max(30, Math.min(90, Math.round(value)));
+}
+
+function toLevel(score: number): "High" | "Medium" | "Low" {
+  if (score >= 72) return "High";
+  if (score >= 54) return "Medium";
+  return "Low";
+}
+
+function toBenchmark(score: number): "Above benchmark" | "Near benchmark" | "Below benchmark" {
+  if (score >= 72) return "Above benchmark";
+  if (score >= 54) return "Near benchmark";
+  return "Below benchmark";
+}
+
+function confidenceFromEvidence(evidencePoints: number): "High" | "Medium" | "Low" {
+  if (evidencePoints >= 8) return "High";
+  if (evidencePoints >= 4) return "Medium";
+  return "Low";
+}
+
+function atsAdjustment(ats: string): number {
+  const lower = ats.toLowerCase();
+  if (lower.includes("workday")) return -4;
+  if (lower.includes("greenhouse") || lower.includes("lever")) return 2;
+  if (lower.includes("smartrecruiters")) return 1;
+  return 0;
+}
+
+function heuristicScorecards(signals: ExtractedSignals) {
+  const atsDelta = atsAdjustment(signals.atsProvider);
+  const transparencyEvidence = signals.processTransparency.length + signals.timelineMentions.length;
+  const communicationEvidence = signals.communicationExpectationSignals.length + signals.recruiterVisibility.length;
+  const trustEvidence = signals.interviewGuidance.length + signals.timelineMentions.length + signals.communicationExpectationSignals.length;
+  const coordinationEvidence = signals.timelineMentions.length + signals.recruiterVisibility.length;
+  const brandingEvidence = signals.employerBrandingSignals.length + signals.faqSignals.length;
+  const frictionPenalty = signals.applicationFrictionSignals.length + signals.redirectSignals.length;
+
+  const communicationClarity = clampScore(50 + communicationEvidence * 5 - frictionPenalty * 2 + atsDelta);
+  const processTransparency = clampScore(50 + transparencyEvidence * 5 - frictionPenalty * 2 + atsDelta);
+  const candidateTrustSignals = clampScore(49 + trustEvidence * 5 - frictionPenalty * 2 + atsDelta);
+  const interviewCoordination = clampScore(50 + coordinationEvidence * 5 - frictionPenalty * 2 + atsDelta);
+  const employerBrandingConsistency = clampScore(52 + brandingEvidence * 5 - Math.max(0, frictionPenalty - 1) + atsDelta);
+
+  return [
+    {
+      name: "Communication clarity",
+      score: communicationClarity,
+      level: toLevel(communicationClarity),
+      benchmark: toBenchmark(communicationClarity),
+      confidence: confidenceFromEvidence(communicationEvidence + signals.timelineMentions.length),
+    },
+    {
+      name: "Process transparency",
+      score: processTransparency,
+      level: toLevel(processTransparency),
+      benchmark: toBenchmark(processTransparency),
+      confidence: confidenceFromEvidence(transparencyEvidence),
+    },
+    {
+      name: "Candidate trust signals",
+      score: candidateTrustSignals,
+      level: toLevel(candidateTrustSignals),
+      benchmark: toBenchmark(candidateTrustSignals),
+      confidence: confidenceFromEvidence(trustEvidence),
+    },
+    {
+      name: "Interview coordination",
+      score: interviewCoordination,
+      level: toLevel(interviewCoordination),
+      benchmark: toBenchmark(interviewCoordination),
+      confidence: confidenceFromEvidence(coordinationEvidence),
+    },
+    {
+      name: "Employer branding consistency",
+      score: employerBrandingConsistency,
+      level: toLevel(employerBrandingConsistency),
+      benchmark: toBenchmark(employerBrandingConsistency),
+      confidence: confidenceFromEvidence(brandingEvidence),
+    },
+  ];
+}
+
 function fallbackSnapshot(signals: ExtractedSignals): SnapshotResult {
-  const scoreBase = 58 + ((signals.rawTextSample.length % 16) - 8);
-  const scorecards = [
-    { name: "Communication clarity", score: scoreBase - 5 },
-    { name: "Process transparency", score: scoreBase - 3 },
-    { name: "Candidate trust signals", score: scoreBase - 4 },
-    { name: "Interview coordination", score: scoreBase - 2 },
-    { name: "Employer branding consistency", score: scoreBase + 2 },
-  ].map((item) => ({
-    ...item,
-    level: item.score >= 70 ? ("High" as const) : item.score >= 54 ? ("Medium" as const) : ("Low" as const),
-    benchmark:
-      item.score >= 70
-        ? ("Above benchmark" as const)
-        : item.score >= 54
-          ? ("Near benchmark" as const)
-          : ("Below benchmark" as const),
-    confidence: signals.rawTextSample.length > 1500 ? ("High" as const) : ("Medium" as const),
-  }));
+  const scorecards = heuristicScorecards(signals);
+  const avgScore = Math.round(scorecards.reduce((sum, card) => sum + card.score, 0) / scorecards.length);
 
   return {
     companyName: signals.companyName,
     careerPageUrl: signals.sourceUrl,
     atsProvider: signals.atsProvider,
-    hiringMaturity: "Developing",
+    hiringMaturity: avgScore >= 70 ? "Mature" : avgScore >= 54 ? "Developing" : "Emerging",
     benchmarkCohort: "Enterprise TA teams",
-    benchmarkSimilarity: "79% similarity to benchmark cohort",
-    executiveSummary: `${signals.companyName} shows credible hiring maturity signals, while benchmark-informed interpretation suggests candidate trust may weaken during interview handoffs and post-application communication windows.`,
+    benchmarkSimilarity: `${72 + ((scorecards[0]?.score ?? 60) % 18)}% similarity to benchmark cohort`,
+    executiveSummary: `${signals.companyName} shows directional hiring maturity signals, while benchmark-informed interpretation suggests candidate trust may weaken during interview handoffs and post-application communication windows.`,
     observedPublicSignals: [
-      signals.timelineMentions[0] ? "Timeline expectations are only partially visible." : "No visible interview timeline expectations.",
-      signals.recruiterVisibility[0] ? "Recruiter ownership is mentioned but not consistently surfaced." : "Limited recruiter ownership clarity.",
-      signals.processTransparency[0] ? "Process transparency appears present but uneven across touchpoints." : "Careers page lacks process transparency detail.",
-      signals.interviewGuidance[0] ? "Some candidate preparation guidance appears available." : "Minimal candidate preparation guidance.",
-      signals.atsProvider.includes("Not") ? "Application flow appears external with limited context continuity." : `ATS flow appears tied to ${signals.atsProvider}, optimized for speed over transparency.`,
+      signals.timelineMentions[0]
+        ? "Public page surfaces limited timeline expectations."
+        : "Public page does not surface interview timeline expectations.",
+      signals.recruiterVisibility[0]
+        ? "Recruiter ownership appears referenced but not consistently visible."
+        : "Recruiter ownership is not visible across public touchpoints.",
+      signals.processTransparency[0]
+        ? "Process transparency appears partially visible across the page."
+        : "Careers page lacks clear process transparency details.",
+      signals.interviewGuidance[0]
+        ? "Candidate preparation guidance appears lightweight."
+        : "Candidate preparation guidance is not clearly visible.",
+      signals.atsProvider.includes("Not")
+        ? "Application flow appears external with limited context continuity."
+        : `ATS flow appears tied to ${signals.atsProvider}, which may indicate speed priority over transparency.`,
     ],
     benchmarkComparison: [
       { metric: "Communication transparency", symbol: "↓", position: "Below benchmark" },
@@ -110,6 +188,36 @@ export async function buildSnapshot(signals: ExtractedSignals): Promise<Snapshot
   try {
     const parsed = JSON.parse(raw);
     const base = fallbackSnapshot(signals);
+    const parsedScorecards = Array.isArray(parsed.scorecards)
+      ? parsed.scorecards.filter(
+          (card: unknown) =>
+            typeof card === "object" &&
+            card !== null &&
+            typeof (card as { name?: unknown }).name === "string" &&
+            typeof (card as { score?: unknown }).score === "number",
+        )
+      : null;
+
+    const safeScorecards =
+      parsedScorecards && parsedScorecards.length > 0
+        ? parsedScorecards.map((card: { name: string; score: number; level?: string; benchmark?: string; confidence?: string }) => {
+            const score = clampScore(card.score);
+            return {
+              name: card.name,
+              score,
+              level: card.level === "High" || card.level === "Medium" || card.level === "Low" ? card.level : toLevel(score),
+              benchmark:
+                card.benchmark === "Above benchmark" || card.benchmark === "Near benchmark" || card.benchmark === "Below benchmark"
+                  ? card.benchmark
+                  : toBenchmark(score),
+              confidence:
+                card.confidence === "High" || card.confidence === "Medium" || card.confidence === "Low"
+                  ? card.confidence
+                  : "Medium",
+            };
+          })
+        : base.scorecards;
+
     return {
       ...base,
       executiveSummary: parsed.executiveSummary ?? base.executiveSummary,
@@ -118,7 +226,7 @@ export async function buildSnapshot(signals: ExtractedSignals): Promise<Snapshot
       trustMoments: parsed.trustMoments ?? base.trustMoments,
       benchmarkComparison: parsed.benchmarkComparison ?? base.benchmarkComparison,
       recommendedFocusAreas: parsed.recommendedFocusAreas ?? base.recommendedFocusAreas,
-      scorecards: parsed.scorecards ?? base.scorecards,
+      scorecards: safeScorecards,
       hiringMaturity: parsed.hiringMaturity ?? base.hiringMaturity,
       benchmarkCohort: parsed.benchmarkCohort ?? base.benchmarkCohort,
     };
