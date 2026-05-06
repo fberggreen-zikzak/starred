@@ -21782,7 +21782,11 @@ function AnalyzerForm({ onSubmit }) {
     }
   }
   const isValid = looksLikeValidUrl(careerPageUrl);
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", { className: "mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-9", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", { className: "grid gap-6", onSubmit: handleSubmit, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", { className: "mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-10", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", { className: "grid gap-6", onSubmit: handleSubmit, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-left", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs font-semibold uppercase tracking-wide text-emerald-700", children: "Start here" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "mt-1 text-sm text-slate-600", children: "Enter a career page URL to generate an executive-ready directional snapshot." })
+    ] }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { className: "flex flex-col gap-2 text-sm font-semibold text-slate-700", children: [
       "Career page URL",
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
@@ -21796,21 +21800,19 @@ function AnalyzerForm({ onSubmit }) {
         }
       )
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-wrap gap-2 text-xs", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700", children: "Based on public signals" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "rounded-full bg-cyan-50 px-2.5 py-1 font-semibold text-cyan-700", children: "Executive summary format" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-600", children: "Directional snapshot" })
-    ] }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs leading-relaxed text-slate-500", children: "Uses publicly available hiring signals only. Results are directional and intended to highlight potential gaps." }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "mt-1", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      "button",
-      {
-        className: "inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 md:w-auto",
-        type: "submit",
-        disabled: !isValid,
-        children: "Generate snapshot"
-      }
-    ) })
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mt-1 flex items-center justify-between gap-3", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs text-slate-400", children: "~2 seconds to generate" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "button",
+        {
+          className: "inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto",
+          type: "submit",
+          disabled: !isValid,
+          children: "Generate report"
+        }
+      )
+    ] })
   ] }) });
 }
 
@@ -21838,33 +21840,27 @@ function InsightCard({ title, badge, icon, children }) {
   ] });
 }
 
-// src/webapp/components/ScoreCard.tsx
-var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
-function scoreAccent(label) {
-  if (label === "Strong") return "text-emerald-700 bg-emerald-50 border-emerald-200";
-  if (label === "Mixed") return "text-amber-700 bg-amber-50 border-amber-200";
-  return "text-rose-700 bg-rose-50 border-rose-200";
-}
-function ScoreCard({ label, interpretation, benchmarkPosition }) {
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("article", { className: "rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-emerald-100/70", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { className: "text-sm font-semibold uppercase tracking-wide text-slate-500", children: "Overall Hiring Experience Signal" }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "mt-4 flex items-center gap-3", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: `inline-flex rounded-full border px-3 py-1 text-sm font-semibold ${scoreAccent(label)}`, children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold text-cyan-800", children: "Benchmark pattern" })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "mt-4 text-base font-medium text-slate-900", children: interpretation }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "mt-2 text-sm text-slate-600", children: benchmarkPosition })
-  ] });
-}
-
 // src/webapp/components/AnalysisReport.tsx
-var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
 function AnalysisReport({ report, onReset }) {
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "mx-auto mt-8 w-full max-w-5xl space-y-5 md:space-y-6", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm ring-1 ring-emerald-100/60", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-wrap items-center justify-between gap-3", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-xs font-semibold uppercase tracking-wide text-emerald-700", children: "Hiring Experience Snapshot" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+  function directionSymbol(direction) {
+    if (direction === "up") return "\u2191";
+    if (direction === "down") return "\u2193";
+    return "\u2248";
+  }
+  function scoreBarWidth(score) {
+    return `${Math.max(0, Math.min(100, score))}%`;
+  }
+  function statusClass(status) {
+    if (status === "Above benchmark") return "text-emerald-700 bg-emerald-50 border-emerald-200";
+    if (status === "Near benchmark") return "text-cyan-700 bg-cyan-50 border-cyan-200";
+    return "text-amber-700 bg-amber-50 border-amber-200";
+  }
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("section", { className: "mx-auto mt-8 w-full max-w-5xl space-y-5 md:space-y-6", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm ring-1 ring-emerald-100/60", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex flex-wrap items-center justify-between gap-3", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-xs font-semibold uppercase tracking-wide text-emerald-700", children: "Hiring Experience Snapshot" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
           "button",
           {
             type: "button",
@@ -21874,51 +21870,75 @@ function AnalysisReport({ report, onReset }) {
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "mt-2 text-2xl font-semibold text-slate-900", children: report.companyName }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "mt-1 text-sm text-slate-600", children: report.companyWebsite }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "mt-3 flex flex-wrap gap-2 text-xs", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "rounded-full bg-slate-100 px-3 py-1 text-slate-700", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "mt-4 flex flex-wrap items-center gap-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-100 to-cyan-100 text-sm font-bold text-slate-700", children: report.companyLogoText }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h2", { className: "text-2xl font-semibold text-slate-900", children: report.companyName }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "mt-1 text-sm text-slate-600", children: report.companyWebsite })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "mt-4 grid gap-3 md:grid-cols-3", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "rounded-xl border border-slate-200 bg-slate-50 p-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-xs uppercase tracking-wide text-slate-500", children: "Hiring maturity" }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "mt-1 text-sm font-semibold text-slate-800", children: report.hiringMaturityLabel })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "rounded-xl border border-slate-200 bg-slate-50 p-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-xs uppercase tracking-wide text-slate-500", children: "Benchmark comparison" }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "mt-1 text-sm font-semibold text-slate-800", children: report.benchmarkComparisonLabel })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "rounded-xl border border-slate-200 bg-slate-50 p-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-xs uppercase tracking-wide text-slate-500", children: "Cohort similarity" }),
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "mt-1 text-sm font-semibold text-slate-800", children: report.benchmarkCohortSimilarity })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "mt-3 flex flex-wrap gap-2 text-xs", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "rounded-full bg-slate-100 px-3 py-1 text-slate-700", children: [
           "Career page: ",
           report.careerPageUrl
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "rounded-full bg-emerald-100 px-3 py-1 text-emerald-800", children: "Based on public signals" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "rounded-full bg-cyan-100 px-3 py-1 text-cyan-800", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "rounded-full bg-emerald-100 px-3 py-1 text-emerald-800", children: "Based on public signals" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "rounded-full bg-cyan-100 px-3 py-1 text-cyan-800", children: [
           "ATS signal: ",
           report.ats
         ] })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-      ScoreCard,
-      {
-        label: report.signalLabel,
-        interpretation: report.signalInterpretation,
-        benchmarkPosition: report.benchmarkPosition
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(InsightCard, { title: "Executive Summary", badge: "Consultative view", icon: "\u25CC", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "space-y-2 text-sm", children: report.executiveSummary.map((line) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { children: line }, line)) }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(InsightCard, { title: "Observed Public Signals", badge: "Based on public signals", icon: "\u25EB", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "space-y-2 text-sm", children: report.observedSignals.map((signal) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: signal }, signal)) }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(InsightCard, { title: "Public Candidate Friction Signals", badge: "Experience layer", icon: "\u2726", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "space-y-2 text-sm", children: report.frictionSignals.map((signal) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: signal }, signal)) }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(InsightCard, { title: "Why this matters", badge: "Benchmark pattern", icon: "\u25B3", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "space-y-2 text-sm", children: report.whyThisMatters.map((item) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: item }, item)) }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(InsightCard, { title: "Recommended Focus Areas", badge: "Priority actions", icon: "\u25C7", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("ul", { className: "space-y-2 text-sm", children: report.priorities.map((recommendation, index) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "mr-2 text-slate-500", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "grid gap-3 md:grid-cols-2 xl:grid-cols-5", children: report.signalScores.map((item) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("article", { className: "rounded-2xl border border-slate-200 bg-white p-4 shadow-sm", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-sm font-semibold text-slate-800", children: item.name }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "mt-2 text-2xl font-semibold text-slate-900", children: item.score }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "mt-2 h-1.5 w-full rounded-full bg-slate-100", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "h-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500", style: { width: scoreBarWidth(item.score) } }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: `mt-3 inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${statusClass(item.status)}`, children: item.status })
+    ] }, item.name)) }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InsightCard, { title: "Executive Summary", badge: "Benchmark-driven", icon: "\u25CC", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-sm leading-relaxed", children: report.executiveSummary }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InsightCard, { title: "Observed Public Signals", badge: "Based on public signals", icon: "\u25EB", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "space-y-2 text-sm", children: report.observedSignals.map((signal) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: signal }, signal)) }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InsightCard, { title: "Benchmark Comparison", badge: "Relative position", icon: "\u2248", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "space-y-2 text-sm", children: report.benchmarkComparison.map((item) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("li", { className: "flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "mr-2 text-slate-500", children: directionSymbol(item.direction) }),
+        item.metric
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "text-xs font-semibold text-slate-600", children: item.label })
+    ] }, item.metric)) }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InsightCard, { title: "Where candidate trust may weaken", badge: "Trust moments", icon: "\u2691", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "space-y-2 text-sm", children: report.trustMoments.map((item) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: item }, item)) }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InsightCard, { title: "Public Candidate Friction Signals", badge: "Experience layer", icon: "\u2726", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "space-y-2 text-sm", children: report.frictionSignals.map((signal) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: signal }, signal)) }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InsightCard, { title: "Why this matters", badge: "Benchmark pattern", icon: "\u25B3", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "space-y-2 text-sm", children: report.whyThisMatters.map((item) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: item }, item)) }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(InsightCard, { title: "Recommended Focus Areas", badge: "Priority actions", icon: "\u25C7", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("ul", { className: "space-y-2 text-sm", children: report.priorities.map((recommendation, index) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("li", { className: "rounded-lg bg-slate-50 px-3 py-2", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "mr-2 text-slate-500", children: [
         index + 1,
         "."
       ] }),
       recommendation
     ] }, recommendation)) }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CTASection, {})
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(CTASection, {})
   ] });
 }
 
 // src/webapp/components/Hero.tsx
-var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
 function Hero() {
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "mb-10 text-center md:mb-12", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "inline-flex rounded-full border border-emerald-200 bg-white/70 px-3 py-1 text-xs font-medium uppercase tracking-wide text-emerald-700", children: "Hiring Experience Analyzer" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h1", { className: "mx-auto mt-6 max-w-4xl text-3xl font-semibold leading-tight text-slate-900 md:text-5xl", children: "Uncover the hiring experience signals candidates already see" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mx-auto mt-3 max-w-3xl text-sm font-medium text-slate-500 md:text-base", children: "Alternative: Find the candidate experience gaps hiding in plain sight" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mx-auto mt-6 max-w-3xl text-base leading-relaxed text-slate-700 md:text-lg", children: "Generate an AI-powered snapshot of public hiring touchpoints, potential friction points, and areas where candidate trust may be lost." })
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "mb-9 text-center md:mb-11", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "inline-flex rounded-full border border-emerald-200 bg-white/70 px-3 py-1 text-xs font-medium uppercase tracking-wide text-emerald-700", children: "Hiring Experience Analyzer" }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h1", { className: "mx-auto mt-5 max-w-4xl text-3xl font-semibold leading-tight text-slate-900 md:text-5xl", children: "Uncover the hiring experience signals candidates already see" }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "mx-auto mt-5 max-w-3xl text-base leading-relaxed text-slate-700 md:text-lg", children: "Generate an AI-powered snapshot of public hiring touchpoints, potential friction points, and areas where candidate trust may be lost." })
   ] });
 }
 
@@ -21927,13 +21947,14 @@ var import_react3 = __toESM(require_react(), 1);
 
 // src/webapp/data.ts
 var LOADING_STEPS = [
-  "Scanning public hiring signals",
-  "Reviewing candidate-facing touchpoints",
-  "Comparing against benchmark patterns"
+  "Analyzing career page...",
+  "Detecting candidate-facing signals...",
+  "Comparing benchmark patterns...",
+  "Generating executive snapshot..."
 ];
 
 // src/webapp/components/LoadingState.tsx
-var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
 function LoadingState() {
   const [stepIndex, setStepIndex] = (0, import_react3.useState)(0);
   (0, import_react3.useEffect)(() => {
@@ -21942,11 +21963,11 @@ function LoadingState() {
     }, 650);
     return () => window.clearInterval(interval);
   }, []);
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("section", { className: "mx-auto mt-10 w-full max-w-3xl rounded-3xl border border-slate-200 bg-white/90 p-8 text-center shadow-xl shadow-emerald-900/10 backdrop-blur", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "mx-auto mb-5 h-10 w-10 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600" }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "text-sm font-semibold uppercase tracking-wide text-emerald-700", children: "Generating hiring snapshot" }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "mt-3 text-lg text-slate-800", children: LOADING_STEPS[stepIndex] }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "mt-2 text-sm text-slate-500", children: "This takes about 2 seconds." })
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "mx-auto mt-10 w-full max-w-3xl rounded-3xl border border-slate-200 bg-white/90 p-8 text-center shadow-xl shadow-emerald-900/10 backdrop-blur", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "mx-auto mb-5 h-10 w-10 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600" }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm font-semibold uppercase tracking-wide text-emerald-700", children: "Generating hiring snapshot" }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mt-3 text-lg text-slate-800", children: LOADING_STEPS[stepIndex] }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mt-2 text-sm text-slate-500", children: "This takes about 2 seconds." })
   ] });
 }
 
@@ -21963,6 +21984,11 @@ function scoreLabel(score) {
   if (score >= 72) return "Strong";
   if (score >= 52) return "Mixed";
   return "At Risk";
+}
+function statusFromScore(score) {
+  if (score >= 72) return "Above benchmark";
+  if (score >= 55) return "Near benchmark";
+  return "Below benchmark";
 }
 function atsSignal(ats) {
   switch (ats) {
@@ -22011,25 +22037,82 @@ function generateSnapshot(input) {
   const ats = atsSignal(input.ats);
   const score = Math.max(32, Math.min(92, base + ats.scoreDelta));
   const signalLabel = scoreLabel(score);
+  const logoText = input.companyName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join("");
   const signalInterpretation = signalLabel === "Strong" ? "Relatively clear visibility across candidate touchpoints, with some opportunities to tighten consistency." : signalLabel === "Mixed" ? "Mixed visibility across candidate touchpoints, with opportunity to improve communication clarity." : "Early signals suggest meaningful gaps in candidate-facing clarity across stages.";
   const benchmarkPosition = signalLabel === "Strong" ? "Around top-performing TA teams on public communication signals" : signalLabel === "Mixed" ? "Below top-performing TA teams on communication clarity" : "Behind common benchmark patterns for candidate expectation-setting";
+  const communicationClarity = Math.max(35, Math.min(90, score - 6));
+  const processTransparency = Math.max(35, Math.min(90, score - 4));
+  const candidateTrustSignals = Math.max(35, Math.min(90, score - 7));
+  const interviewCoordination = Math.max(35, Math.min(90, score - 5));
+  const hiringConsistency = Math.max(35, Math.min(90, score - 3));
   return {
     careerPageUrl: input.careerPageUrl,
     companyName: input.companyName,
     companyWebsite: input.companyWebsite,
     ats: input.ats,
+    companyLogoText: logoText || "CO",
+    hiringMaturityLabel: signalLabel === "Strong" ? "Mature hiring signal profile" : signalLabel === "Mixed" ? "Developing hiring signal profile" : "Early-stage hiring signal profile",
+    benchmarkComparisonLabel: signalLabel === "Strong" ? "Above benchmark on candidate-facing consistency" : signalLabel === "Mixed" ? "Near benchmark, with communication gaps" : "Below benchmark on communication clarity",
+    benchmarkCohortSimilarity: `${72 + seed % 18}% similarity to enterprise TA benchmark cohort`,
     signalLabel,
     signalInterpretation,
     benchmarkPosition,
-    executiveSummary: [
-      `${input.companyName} appears to have a reasonably structured hiring setup, but public candidate-facing signals suggest opportunities to improve communication consistency and expectation-setting.`,
-      `Based on public signals, teams with similar setups often struggle most with visibility between interview stages and alignment across hiring stakeholders.`
+    executiveSummary: `${input.companyName} shows signals of hiring maturity, but benchmark evidence suggests candidate trust may weaken during interview-stage handoffs and communication gaps between stages.`,
+    signalScores: [
+      {
+        name: "Communication clarity",
+        score: communicationClarity,
+        status: statusFromScore(communicationClarity)
+      },
+      {
+        name: "Process transparency",
+        score: processTransparency,
+        status: statusFromScore(processTransparency)
+      },
+      {
+        name: "Candidate trust signals",
+        score: candidateTrustSignals,
+        status: statusFromScore(candidateTrustSignals)
+      },
+      {
+        name: "Interview coordination",
+        score: interviewCoordination,
+        status: statusFromScore(interviewCoordination)
+      },
+      {
+        name: "Hiring consistency",
+        score: hiringConsistency,
+        status: statusFromScore(hiringConsistency)
+      }
     ],
     observedSignals: [
-      "Careers experience appears to include limited process guidance for what candidates should expect after applying.",
-      "Interview timeline expectations are not clearly surfaced in public touchpoints.",
-      "Candidate-facing touchpoints appear fragmented across stages, which may indicate uneven handoffs.",
-      `ATS signal (${input.ats}) suggests limited public visibility into candidate experience feedback loops.`
+      "No visible interview timeline expectations.",
+      "Limited recruiter ownership clarity across public touchpoints.",
+      "Careers page appears to include limited process transparency.",
+      "Candidate preparation guidance is not clearly surfaced.",
+      "ATS flow appears optimized for speed over transparency."
+    ],
+    benchmarkComparison: [
+      {
+        metric: "Communication transparency",
+        direction: "down",
+        label: "Below benchmark"
+      },
+      {
+        metric: "Application simplicity",
+        direction: "flat",
+        label: "Near benchmark"
+      },
+      {
+        metric: "Employer branding consistency",
+        direction: "up",
+        label: "Above benchmark"
+      }
+    ],
+    trustMoments: [
+      "After application submission",
+      "Between interview rounds",
+      "Post-final interview communication"
     ],
     frictionSignals: [
       "Candidates may struggle to understand what happens between interview stages and when to expect updates.",
@@ -22043,15 +22126,16 @@ function generateSnapshot(input) {
       "Weaker employer brand trust"
     ],
     priorities: [
-      "Improve expectation-setting between interview stages",
-      "Measure candidate feedback at key journey moments",
-      "Identify where hiring manager coordination impacts candidate confidence"
+      "Improve interview timeline transparency",
+      "Reduce silence between interview rounds",
+      "Clarify recruiter ownership",
+      "Set candidate expectations earlier"
     ]
   };
 }
 
 // src/webapp/main.tsx
-var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
 function App() {
   const [state, setState] = (0, import_react4.useState)("idle");
   const [report, setReport] = (0, import_react4.useState)(null);
@@ -22067,18 +22151,18 @@ function App() {
     setState("idle");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("section", { className: "mx-auto max-w-6xl rounded-[28px] border border-white/80 bg-gradient-to-br from-emerald-50/90 via-cyan-50/85 to-slate-100/90 px-4 py-8 shadow-xl shadow-slate-900/10 backdrop-blur md:px-8 md:py-12", children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "mx-auto max-w-5xl", children: [
-    state !== "report" && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Hero, {}),
-    state === "idle" && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(AnalyzerForm, { onSubmit: handleGenerate }),
-    state === "loading" && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(LoadingState, {}),
-    state === "report" && report && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(AnalysisReport, { report, onReset: handleReset })
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("section", { className: "mx-auto max-w-6xl rounded-[28px] border border-white/80 bg-gradient-to-br from-emerald-50/95 via-cyan-50/90 to-slate-100/95 px-4 py-8 shadow-xl shadow-slate-900/10 backdrop-blur md:px-8 md:py-14", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "mx-auto max-w-[58rem]", children: [
+    state !== "report" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Hero, {}),
+    state === "idle" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AnalyzerForm, { onSubmit: handleGenerate }),
+    state === "loading" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LoadingState, {}),
+    state === "report" && report && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AnalysisReport, { report, onReset: handleReset })
   ] }) });
 }
 var mountNode = document.getElementById("app");
 if (!mountNode) {
   throw new Error("Missing app root node");
 }
-(0, import_client.createRoot)(mountNode).render(/* @__PURE__ */ (0, import_jsx_runtime8.jsx)(App, {}));
+(0, import_client.createRoot)(mountNode).render(/* @__PURE__ */ (0, import_jsx_runtime7.jsx)(App, {}));
 /*! Bundled license information:
 
 scheduler/cjs/scheduler.development.js:

@@ -15,6 +15,12 @@ function scoreLabel(score: number): "Strong" | "Mixed" | "At Risk" {
   return "At Risk";
 }
 
+function statusFromScore(score: number): "Above benchmark" | "Near benchmark" | "Below benchmark" {
+  if (score >= 72) return "Above benchmark";
+  if (score >= 55) return "Near benchmark";
+  return "Below benchmark";
+}
+
 function atsSignal(ats: FormData["ats"]): { scoreDelta: number; insight: string; risk: string } {
   switch (ats) {
     case "Workday":
@@ -63,6 +69,12 @@ export function generateSnapshot(input: FormData): SnapshotReport {
   const ats = atsSignal(input.ats);
   const score = Math.max(32, Math.min(92, base + ats.scoreDelta));
   const signalLabel = scoreLabel(score);
+  const logoText = input.companyName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join("");
 
   const signalInterpretation =
     signalLabel === "Strong"
@@ -78,23 +90,80 @@ export function generateSnapshot(input: FormData): SnapshotReport {
         ? "Below top-performing TA teams on communication clarity"
         : "Behind common benchmark patterns for candidate expectation-setting";
 
+  const communicationClarity = Math.max(35, Math.min(90, score - 6));
+  const processTransparency = Math.max(35, Math.min(90, score - 4));
+  const candidateTrustSignals = Math.max(35, Math.min(90, score - 7));
+  const interviewCoordination = Math.max(35, Math.min(90, score - 5));
+  const hiringConsistency = Math.max(35, Math.min(90, score - 3));
+
   return {
     careerPageUrl: input.careerPageUrl,
     companyName: input.companyName,
     companyWebsite: input.companyWebsite,
     ats: input.ats,
+    companyLogoText: logoText || "CO",
+    hiringMaturityLabel: signalLabel === "Strong" ? "Mature hiring signal profile" : signalLabel === "Mixed" ? "Developing hiring signal profile" : "Early-stage hiring signal profile",
+    benchmarkComparisonLabel: signalLabel === "Strong" ? "Above benchmark on candidate-facing consistency" : signalLabel === "Mixed" ? "Near benchmark, with communication gaps" : "Below benchmark on communication clarity",
+    benchmarkCohortSimilarity: `${72 + (seed % 18)}% similarity to enterprise TA benchmark cohort`,
     signalLabel,
     signalInterpretation,
     benchmarkPosition,
-    executiveSummary: [
-      `${input.companyName} appears to have a reasonably structured hiring setup, but public candidate-facing signals suggest opportunities to improve communication consistency and expectation-setting.`,
-      `Based on public signals, teams with similar setups often struggle most with visibility between interview stages and alignment across hiring stakeholders.`,
+    executiveSummary: `${input.companyName} shows signals of hiring maturity, but benchmark evidence suggests candidate trust may weaken during interview-stage handoffs and communication gaps between stages.`,
+    signalScores: [
+      {
+        name: "Communication clarity",
+        score: communicationClarity,
+        status: statusFromScore(communicationClarity),
+      },
+      {
+        name: "Process transparency",
+        score: processTransparency,
+        status: statusFromScore(processTransparency),
+      },
+      {
+        name: "Candidate trust signals",
+        score: candidateTrustSignals,
+        status: statusFromScore(candidateTrustSignals),
+      },
+      {
+        name: "Interview coordination",
+        score: interviewCoordination,
+        status: statusFromScore(interviewCoordination),
+      },
+      {
+        name: "Hiring consistency",
+        score: hiringConsistency,
+        status: statusFromScore(hiringConsistency),
+      },
     ],
     observedSignals: [
-      "Careers experience appears to include limited process guidance for what candidates should expect after applying.",
-      "Interview timeline expectations are not clearly surfaced in public touchpoints.",
-      "Candidate-facing touchpoints appear fragmented across stages, which may indicate uneven handoffs.",
-      `ATS signal (${input.ats}) suggests limited public visibility into candidate experience feedback loops.`,
+      "No visible interview timeline expectations.",
+      "Limited recruiter ownership clarity across public touchpoints.",
+      "Careers page appears to include limited process transparency.",
+      "Candidate preparation guidance is not clearly surfaced.",
+      "ATS flow appears optimized for speed over transparency.",
+    ],
+    benchmarkComparison: [
+      {
+        metric: "Communication transparency",
+        direction: "down",
+        label: "Below benchmark",
+      },
+      {
+        metric: "Application simplicity",
+        direction: "flat",
+        label: "Near benchmark",
+      },
+      {
+        metric: "Employer branding consistency",
+        direction: "up",
+        label: "Above benchmark",
+      },
+    ],
+    trustMoments: [
+      "After application submission",
+      "Between interview rounds",
+      "Post-final interview communication",
     ],
     frictionSignals: [
       "Candidates may struggle to understand what happens between interview stages and when to expect updates.",
@@ -108,9 +177,10 @@ export function generateSnapshot(input: FormData): SnapshotReport {
       "Weaker employer brand trust",
     ],
     priorities: [
-      "Improve expectation-setting between interview stages",
-      "Measure candidate feedback at key journey moments",
-      "Identify where hiring manager coordination impacts candidate confidence",
+      "Improve interview timeline transparency",
+      "Reduce silence between interview rounds",
+      "Clarify recruiter ownership",
+      "Set candidate expectations earlier",
     ],
   };
 }

@@ -77,8 +77,12 @@ export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
   const isValid = looksLikeValidUrl(careerPageUrl);
 
   return (
-    <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-9">
+    <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-10">
       <form className="grid gap-6" onSubmit={handleSubmit}>
+        <div className="text-left">
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Start here</p>
+          <p className="mt-1 text-sm text-slate-600">Enter a career page URL to generate an executive-ready directional snapshot.</p>
+        </div>
         <label className="flex flex-col gap-2 text-sm font-semibold text-slate-700">
           Career page URL
           <input
@@ -90,23 +94,18 @@ export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
           />
         </label>
 
-        <div className="flex flex-wrap gap-2 text-xs">
-          <span className="rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700">Based on public signals</span>
-          <span className="rounded-full bg-cyan-50 px-2.5 py-1 font-semibold text-cyan-700">Executive summary format</span>
-          <span className="rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-600">Directional snapshot</span>
-        </div>
-
         <p className="text-xs leading-relaxed text-slate-500">
           Uses publicly available hiring signals only. Results are directional and intended to highlight potential gaps.
         </p>
 
-        <div className="mt-1">
+        <div className="mt-1 flex items-center justify-between gap-3">
+          <p className="text-xs text-slate-400">~2 seconds to generate</p>
           <button
-            className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 md:w-auto"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
             type="submit"
             disabled={!isValid}
           >
-            Generate snapshot
+            Generate report
           </button>
         </div>
       </form>

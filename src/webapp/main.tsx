@@ -28,8 +28,8 @@ function App(): JSX.Element {
   }
 
   return (
-    <section className="mx-auto max-w-6xl rounded-[28px] border border-white/80 bg-gradient-to-br from-emerald-50/90 via-cyan-50/85 to-slate-100/90 px-4 py-8 shadow-xl shadow-slate-900/10 backdrop-blur md:px-8 md:py-12">
-      <div className="mx-auto max-w-5xl">
+    <section className="mx-auto max-w-6xl rounded-[28px] border border-white/80 bg-gradient-to-br from-emerald-50/95 via-cyan-50/90 to-slate-100/95 px-4 py-8 shadow-xl shadow-slate-900/10 backdrop-blur md:px-8 md:py-14">
+      <div className="mx-auto max-w-[58rem]">
         {state !== "report" && <Hero />}
         {state === "idle" && <AnalyzerForm onSubmit={handleGenerate} />}
         {state === "loading" && <LoadingState />}

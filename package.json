@@ -4,10 +4,14 @@
   "description": "Local Node.js TypeScript starter project",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx src/index.ts",
-    "build:web": "esbuild src/webapp/main.tsx --bundle --outfile=public/app.js --format=esm --jsx=automatic",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "legacy:dev": "tsx src/index.ts",
+    "legacy:build:web": "esbuild src/webapp/main.tsx --bundle --outfile=public/app.js --format=esm --jsx=automatic",
+    "legacy:build": "tsc -p tsconfig.json",
+    "legacy:start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +26,14 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.2.4",
+    "cheerio": "^1.2.0",
+    "next": "^16.2.4",
+    "openai": "^6.36.0",
+    "playwright": "^1.59.1",
+    "postcss": "^8.5.14",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "tailwindcss": "^4.2.4"
   }
 }

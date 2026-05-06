@@ -11,7 +11,8 @@ export const ATS_OPTIONS: AtsOption[] = [
 ];
 
 export const LOADING_STEPS = [
-  "Scanning public hiring signals",
-  "Reviewing candidate-facing touchpoints",
-  "Comparing against benchmark patterns",
+  "Analyzing career page...",
+  "Detecting candidate-facing signals...",
+  "Comparing benchmark patterns...",
+  "Generating executive snapshot...",
 ];
