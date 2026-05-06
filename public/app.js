@@ -1,381 +1,131 @@
-import React, { useEffect, useMemo, useRef, useState } from "https://esm.sh/react@18.3.1";
-import { createRoot } from "https://esm.sh/react-dom@18.3.1/client";
+const root = document.getElementById("ai-experience");
 
-const API_URL = window.AI_ASK_ENDPOINT || "/api/ask";
+if (!root) {
+  throw new Error("Missing ai-experience root");
+}
 
-const QUESTION_BANK = [
-  {
-    text: "Which candidate experience metrics improved most this year?",
-    tags: ["improved", "metrics", "year", "trend"],
-  },
-  {
-    text: "Where are companies losing candidates in the hiring journey?",
-    tags: ["losing", "journey", "drop", "funnel", "stage"],
-  },
-  {
-    text: "How do top-performing TA teams differ from the benchmark average?",
-    tags: ["top", "teams", "average", "performance"],
-  },
-  {
-    text: "What are the biggest gaps between recruiter and candidate perception?",
-    tags: ["gaps", "perception", "recruiter", "candidate"],
-  },
-  {
-    text: "Which benchmark findings should a Head of Talent act on first?",
-    tags: ["head", "talent", "priority", "first"],
-  },
-  {
-    text: "What predicts a future drop in candidate confidence?",
-    tags: ["predict", "confidence", "risk"],
-  },
-  {
-    text: "Which interview stages show the highest negative sentiment?",
-    tags: ["interview", "stages", "sentiment"],
-  },
+const promptCards = [
+  { icon: "✦", color: "purple", text: "Which candidate experience metrics improved most this year?" },
+  { icon: "◌", color: "green", text: "Where are companies losing candidates in the hiring journey?" },
+  { icon: "△", color: "amber", text: "How do top-performing TA teams differ from the benchmark average?" },
+  { icon: "◫", color: "blue", text: "What are the biggest gaps between recruiter and candidate perception?" },
+  { icon: "◇", color: "pink", text: "Which benchmark findings should a Head of Talent act on first?" },
 ];
 
-function getAnswerForQuestion(question) {
-  const q = question.toLowerCase();
-  if (q.includes("confidence") || q.includes("losing") || q.includes("drop")) {
-    return {
-      headline: "Late-stage delays are the sharpest confidence risk.",
-      bullets: [
-        "Confidence drops most between final interview and decision communication.",
-        "Teams with decision latency above 10 days report materially lower candidate trust.",
-        "Faster decision updates consistently correlate with better acceptance outcomes.",
-      ],
-      takeaway:
-        "For TA leaders: set a final-stage SLA and enforce manager response times before changing tooling.",
-    };
-  }
-  if (q.includes("top") || q.includes("differ") || q.includes("average")) {
-    return {
-      headline: "Top-performing TA teams win on execution consistency.",
-      bullets: [
-        "They run tighter stage-to-stage SLAs and fewer handoff delays.",
-        "They deliver more proactive candidate communication at each stage.",
-        "They review recruiter-candidate perception gaps monthly and act quickly.",
-      ],
-      takeaway:
-        "For TA leaders: prioritize operational discipline first; process clarity drives more uplift than new process complexity.",
-    };
-  }
-  return {
-    headline: "Execution consistency is the strongest cross-benchmark lever.",
-    bullets: [
-      "Teams with stage-level standards outperform peers on candidate experience.",
-      "The largest performance gaps appear in communication speed and expectation setting.",
-      "Candidate sentiment and funnel conversion move together when stage execution improves.",
-    ],
-    takeaway:
-      "For TA leaders: start with one high-friction stage, set clear standards, and track sentiment plus conversion together.",
-  };
+root.innerHTML = `
+  <div class="query-zone" id="query-zone">
+    <form class="search-wrap" id="ask-form">
+      <input
+        id="question-input"
+        class="search-input"
+        type="text"
+        placeholder="Ask a question about benchmark trends, gaps, or top performers..."
+        autocomplete="off"
+        required
+      />
+      <button class="send-btn" type="submit" aria-label="Ask question">➤</button>
+    </form>
+    <div class="helper-text">Powered by benchmark evidence from Starred's 2026 report.</div>
+    <div id="result-container"></div>
+  </div>
+  <div id="loading-container"></div>
+  <div class="try-asking" id="try-asking">Try asking:</div>
+  <div class="questions" id="questions"></div>
+`;
+
+const form = document.getElementById("ask-form");
+const input = document.getElementById("question-input");
+const loadingContainer = document.getElementById("loading-container");
+const resultContainer = document.getElementById("result-container");
+const questions = document.getElementById("questions");
+const tryAsking = document.getElementById("try-asking");
+const queryZone = document.getElementById("query-zone");
+
+if (!form || !input || !loadingContainer || !resultContainer || !questions || !tryAsking || !queryZone) {
+  throw new Error("Missing benchmark UI elements");
 }
 
-function normalizeApiAnswer(payload) {
-  if (!payload || typeof payload !== "object") return null;
-  const headline = payload.headline || payload.title || payload.insight;
-  const bullets = Array.isArray(payload.bullets) ? payload.bullets : payload.points;
-  const takeaway = payload.takeaway || payload.action || payload.nextStep;
-
-  if (!headline || !Array.isArray(bullets) || !takeaway) return null;
-  return { headline, bullets: bullets.slice(0, 3), takeaway };
-}
-
-async function fetchBenchmarkAnswer(question) {
-  const response = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+promptCards.forEach((card) => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "card prompt-card";
+  button.innerHTML = `<span class="icon ${card.color}">${card.icon}</span><p>${card.text}</p>`;
+  button.addEventListener("click", () => {
+    input.value = card.text;
+    form.requestSubmit();
   });
+  questions.appendChild(button);
+});
 
-  if (!response.ok) {
-    throw new Error(`API request failed (${response.status})`);
+function setBusy(isBusy) {
+  const searchWrap = form;
+  if (isBusy) {
+    searchWrap.classList.add("is-active");
+    queryZone.classList.add("results-mode");
+    tryAsking.classList.add("dimmed");
+    questions.classList.add("dimmed");
+    loadingContainer.innerHTML = `
+      <div class="loading-indicator" role="status" aria-live="polite">
+        <span class="loading-dot"></span>
+        <span class="loading-dot"></span>
+        <span class="loading-dot"></span>
+      </div>
+    `;
+    } else {
+    loadingContainer.innerHTML = "";
   }
-
-  const payload = await response.json();
-  const normalized = normalizeApiAnswer(payload);
-
-  if (!normalized) {
-    throw new Error("API response shape is invalid");
-  }
-
-  return normalized;
 }
 
-function SuggestionList({ suggestions, onSelect }) {
-  return React.createElement(
-    "div",
-    { className: "suggestions-popover" },
-    suggestions.map((item) =>
-      React.createElement(
-        "button",
-        {
-          key: item.text,
-          type: "button",
-          className: "suggestion-item",
-          onClick: () => onSelect(item.text),
-        },
-        item.text,
-      ),
-    ),
-  );
+function renderAnswer(payload) {
+  const bullets = Array.isArray(payload.bullets) ? payload.bullets : [];
+  resultContainer.innerHTML = `
+    <article class="answer-card">
+      <p class="answer-label">Benchmark answer</p>
+      <h3 class="answer-headline">${payload.headline ?? "Benchmark insight"}</h3>
+      <ul class="answer-list">
+        ${bullets.map((item) => `<li>${item}</li>`).join("")}
+      </ul>
+      <p class="answer-takeaway">${payload.takeaway ?? ""}</p>
+      <a class="answer-cta answer-cta--benchmark" href="#">Explore benchmark methodology →</a>
+    </article>
+  `;
 }
 
-function AnswerCard({ answer }) {
-  const question = (answer.question || "").toLowerCase();
-  let ctaText = "Try Starred for free \u2192";
-  let ctaVariant = "default";
-  let ctaIcon = "\u2726";
-
-  if (question.includes("confidence") || question.includes("drop") || question.includes("losing")) {
-    ctaText = "See how Starred helps reduce candidate drop-off \u2192";
-    ctaVariant = "risk";
-    ctaIcon = "\u26A0";
-  } else if (
-    question.includes("recruiter") ||
-    question.includes("candidate perception") ||
-    question.includes("gap")
-  ) {
-    ctaText = "See how Starred surfaces perception gaps \u2192";
-    ctaVariant = "gap";
-    ctaIcon = "\u25C8";
-  } else if (
-    question.includes("top") ||
-    question.includes("average") ||
-    question.includes("benchmark")
-  ) {
-    ctaText = "See how Starred benchmarks your hiring performance \u2192";
-    ctaVariant = "benchmark";
-    ctaIcon = "\u25A5";
-  } else if (question.includes("head of talent") || question.includes("prioritize")) {
-    ctaText = "See how Starred helps prioritize TA actions \u2192";
-    ctaVariant = "priority";
-    ctaIcon = "\u2713";
-  }
-
-  return React.createElement(
-    "section",
-    { className: "answer-card" },
-    React.createElement("p", { className: "answer-label" }, "Benchmark answer"),
-    React.createElement("h3", { className: "answer-headline" }, answer.headline),
-    React.createElement(
-      "ul",
-      { className: "answer-list" },
-      answer.bullets.map((item) => React.createElement("li", { key: item }, item)),
-    ),
-    React.createElement(
-      "p",
-      { className: "answer-takeaway" },
-      React.createElement("strong", null, "Practical takeaway: "),
-      answer.takeaway,
-    ),
-    React.createElement(
-      "a",
-      {
-        className: `answer-cta answer-cta--${ctaVariant}`,
-        href: "https://www.starred.com/request-a-demo",
-        target: "_blank",
-        rel: "noreferrer",
-      },
-      `${ctaIcon} ${ctaText}`,
-    ),
-  );
+function renderError(message) {
+  resultContainer.innerHTML = `
+    <article class="answer-card">
+      <p class="answer-label">Unable to answer right now</p>
+      <h3 class="answer-headline">We hit a temporary issue</h3>
+      <p class="answer-takeaway">${message}</p>
+    </article>
+  `;
 }
 
-function App() {
-  const [input, setInput] = useState("");
-  const [focused, setFocused] = useState(false);
-  const [debouncedInput, setDebouncedInput] = useState("");
-  const [submittedQuestion, setSubmittedQuestion] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [answer, setAnswer] = useState(null);
-  const queryZoneRef = useRef(null);
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const question = input.value.trim();
+  if (!question) return;
 
-  const isTyping = input.trim().length > 0;
-  const isActive = focused || isLoading;
-  const isResultsMode = Boolean(submittedQuestion);
+  resultContainer.innerHTML = "";
+  setBusy(true);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedInput(input.trim().toLowerCase()), 200);
-    return () => clearTimeout(timeout);
-  }, [input]);
+  try {
+    const response = await fetch("/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (!queryZoneRef.current) return;
-      if (!queryZoneRef.current.contains(event.target)) {
-        setFocused(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-    document.addEventListener("touchstart", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-      document.removeEventListener("touchstart", handleOutsideClick);
-    };
-  }, []);
-
-  const suggestions = useMemo(() => {
-    if (!debouncedInput) return [];
-    const words = debouncedInput.split(/\s+/).filter(Boolean);
-    return QUESTION_BANK.map((item) => {
-      const text = item.text.toLowerCase();
-      const scoreFromText = words.reduce(
-        (acc, word) => acc + (text.includes(word) ? 2 : 0),
-        0,
-      );
-      const scoreFromTags = words.reduce(
-        (acc, word) => acc + (item.tags.some((tag) => tag.includes(word)) ? 1 : 0),
-        0,
-      );
-      return { ...item, score: scoreFromText + scoreFromTags };
-    })
-      .filter((item) => item.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 5);
-  }, [debouncedInput]);
-
-  const showSuggestions = focused && isTyping && !isLoading && suggestions.length > 0;
-  const showHelper = focused && isTyping;
-
-  const handleSubmit = (value) => {
-    void (async () => {
-    const question = (value ?? input).trim();
-    if (!question) return;
-    setInput(question);
-    setSubmittedQuestion(question);
-    setIsLoading(true);
-    setAnswer(null);
-
-    try {
-      const apiAnswer = await fetchBenchmarkAnswer(question);
-      setAnswer({ ...apiAnswer, question });
-    } catch {
-      // Keep the experience responsive even if backend isn't available yet.
-      await new Promise((resolve) => window.setTimeout(resolve, 900));
-      setAnswer({ ...getAnswerForQuestion(question), question });
-    } finally {
-      setIsLoading(false);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload?.error ?? "Request failed");
     }
-    })();
-  };
 
-  return React.createElement(
-    React.Fragment,
-    null,
-    React.createElement(
-      "div",
-      { className: "hero-copy" },
-      React.createElement("div", { className: "pill" }, "AI CO-PILOT FOR TA"),
-      React.createElement(
-        "h1",
-        null,
-        "Get answers from the",
-        React.createElement("br"),
-        React.createElement("span", { className: "gradient-word" }, "2026 Benchmark Report"),
-      ),
-      React.createElement(
-        "p",
-        { className: "subtitle" },
-        "Explore insights from our annual Candidate Experience Benchmark Report",
-      ),
-    ),
-    React.createElement(
-      "div",
-      { className: `query-zone ${isResultsMode ? "results-mode" : ""}`, ref: queryZoneRef },
-      React.createElement(
-        "form",
-        {
-          className: `search-wrap ${isActive ? "is-active" : ""} ${isTyping ? "is-typing" : ""}`,
-          onSubmit: (event) => {
-            event.preventDefault();
-            handleSubmit();
-          },
-        },
-        React.createElement("input", {
-          className: "search-input",
-          type: "text",
-          value: input,
-          placeholder: "Ask a question about benchmark trends, gaps, or top performers...",
-          "aria-label": "Ask a question",
-          onFocus: () => setFocused(true),
-          onBlur: () => {
-            window.setTimeout(() => setFocused(false), 120);
-          },
-          onChange: (event) => setInput(event.target.value),
-        }),
-        React.createElement(
-          "button",
-          { className: "send-btn", type: "submit", "aria-label": "Send question" },
-          "\u27A4",
-        ),
-      ),
-      showHelper &&
-        React.createElement("p", { className: "helper-text" }, "Based on 2026 Benchmark data"),
-      showSuggestions &&
-        React.createElement(SuggestionList, {
-          suggestions,
-          onSelect: (text) => handleSubmit(text),
-        }),
-      isLoading &&
-        React.createElement(
-          "div",
-          { className: "loading-indicator" },
-          React.createElement("span", { className: "loading-dot" }),
-          React.createElement("span", { className: "loading-dot" }),
-          React.createElement("span", { className: "loading-dot" }),
-        ),
-      answer && React.createElement(AnswerCard, { answer }),
-    ),
-    React.createElement(
-      "div",
-      { className: `try-asking ${showSuggestions ? "dimmed" : ""}` },
-      "Try asking:",
-    ),
-    React.createElement(
-      "section",
-      { className: `questions ${showSuggestions ? "dimmed" : ""}` },
-      QUESTION_BANK.slice(0, 5).map((item, idx) =>
-        React.createElement(
-          "button",
-          {
-            className: "card prompt-card",
-            key: item.text,
-            type: "button",
-            onClick: () => handleSubmit(item.text),
-            "aria-label": `Use predefined prompt: ${item.text}`,
-          },
-          React.createElement(
-            "span",
-            {
-              className: `icon ${
-                ["purple", "green", "amber", "blue", "pink"][idx % 5]
-              }`,
-            },
-            ["\u2301", "\u23F1", "\u25B3", "\u25A5", "\u2727"][idx % 5],
-          ),
-          React.createElement("p", null, item.text),
-        ),
-      ),
-    ),
-    React.createElement(
-      "footer",
-      { className: "hero-footer" },
-      React.createElement("p", null, "Ready to ask better questions about your hiring experience?"),
-      React.createElement(
-        "a",
-        {
-          href: "https://www.starred.com/request-a-demo",
-          target: "_blank",
-          rel: "noreferrer",
-        },
-        "See Starred AI Co-Pilot in action \u2192",
-      ),
-    ),
-  );
-}
-
-const root = createRoot(document.getElementById("ai-experience"));
-root.render(React.createElement(App));
+    renderAnswer(payload);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Please try again in a moment.";
+    renderError(message);
+  } finally {
+    setBusy(false);
+  }
+});

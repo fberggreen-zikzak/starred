@@ -371,6 +371,32 @@ body {
   transform: translateY(-1px);
 }
 
+.site-footer {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 10px auto 34px;
+  padding: 0 24px;
+  text-align: center;
+  color: #768198;
+  font-size: 14px;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer a {
+  margin-left: 8px;
+  color: #415de8;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.site-footer a:hover {
+  color: #324ad1;
+}
+
 .query-zone {
   width: min(840px, 100%);
   margin: 0 auto;
@@ -710,6 +736,12 @@ body {
   .questions {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .site-footer {
+    margin-bottom: 26px;
+    padding: 0 14px;
+    font-size: 13px;
   }
 
   .card {
