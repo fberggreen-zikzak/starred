@@ -21782,13 +21782,13 @@ function AnalyzerForm({ onSubmit }) {
     }
   }
   const isValid = looksLikeValidUrl(careerPageUrl);
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", { className: "mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-8", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", { className: "grid gap-5", onSubmit: handleSubmit, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", { className: "mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-9", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", { className: "grid gap-6", onSubmit: handleSubmit, children: [
     /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { className: "flex flex-col gap-2 text-sm font-semibold text-slate-700", children: [
       "Career page URL",
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "input",
         {
-          className: "rounded-2xl border border-slate-300 bg-white px-5 py-3.5 text-base text-slate-900 outline-none ring-emerald-500 transition focus:border-emerald-500 focus:ring",
+          className: "rounded-2xl border border-slate-300 bg-white px-5 py-3.5 text-base text-slate-900 outline-none ring-emerald-500 transition placeholder:text-slate-400 hover:border-slate-400 focus:border-emerald-500 focus:ring",
           value: careerPageUrl,
           onChange: (event) => setCareerPageUrl(event.target.value),
           placeholder: "https://company.com/careers",
@@ -21798,16 +21798,17 @@ function AnalyzerForm({ onSubmit }) {
     ] }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-wrap gap-2 text-xs", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700", children: "Based on public signals" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "rounded-full bg-cyan-50 px-2.5 py-1 font-semibold text-cyan-700", children: "Executive summary format" })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "rounded-full bg-cyan-50 px-2.5 py-1 font-semibold text-cyan-700", children: "Executive summary format" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "rounded-full bg-slate-100 px-2.5 py-1 font-semibold text-slate-600", children: "Directional snapshot" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs leading-relaxed text-slate-500", children: "Public signals only. Snapshot language is directional and may indicate potential gaps." }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs leading-relaxed text-slate-500", children: "Uses publicly available hiring signals only. Results are directional and intended to highlight potential gaps." }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "mt-1", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       "button",
       {
         className: "inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 md:w-auto",
         type: "submit",
         disabled: !isValid,
-        children: "Generate your hiring snapshot"
+        children: "Generate snapshot"
       }
     ) })
   ] }) });
@@ -21913,18 +21914,11 @@ function AnalysisReport({ report, onReset }) {
 // src/webapp/components/Hero.tsx
 var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
 function Hero() {
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "mb-8 text-center md:mb-10", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "mb-5 flex justify-start", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-      "a",
-      {
-        href: "/",
-        className: "inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50",
-        children: "\u2190 Go back"
-      }
-    ) }),
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "mb-10 text-center md:mb-12", children: [
     /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "inline-flex rounded-full border border-emerald-200 bg-white/70 px-3 py-1 text-xs font-medium uppercase tracking-wide text-emerald-700", children: "Hiring Experience Analyzer" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h1", { className: "mx-auto mt-5 max-w-4xl text-3xl font-semibold leading-tight text-slate-900 md:text-5xl", children: "See where your hiring experience may be costing you candidates" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mx-auto mt-5 max-w-3xl text-base text-slate-700 md:text-lg", children: "Generate an AI-powered snapshot of public hiring signals, candidate friction points, and potential experience gaps before they impact your pipeline." })
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h1", { className: "mx-auto mt-6 max-w-4xl text-3xl font-semibold leading-tight text-slate-900 md:text-5xl", children: "Uncover the hiring experience signals candidates already see" }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mx-auto mt-3 max-w-3xl text-sm font-medium text-slate-500 md:text-base", children: "Alternative: Find the candidate experience gaps hiding in plain sight" }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mx-auto mt-6 max-w-3xl text-base leading-relaxed text-slate-700 md:text-lg", children: "Generate an AI-powered snapshot of public hiring touchpoints, potential friction points, and areas where candidate trust may be lost." })
   ] });
 }
 

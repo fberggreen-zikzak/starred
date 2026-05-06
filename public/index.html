@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Starred</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,10 +16,10 @@
   <body>
     <div class="page-bg"></div>
     <header class="top-nav">
-      <div class="brand">
+      <a class="brand" href="/">
         <span class="brand-mark">✦</span>
         <span class="brand-text">starred</span>
-      </div>
+      </a>
       <nav class="nav-links">
         <a href="#">Platform</a>
         <a href="#">Solutions</a>
@@ -32,26 +33,38 @@
       </div>
     </header>
 
-    <main class="hero">
-      <section class="hero-copy">
-        <span class="pill">AI CO-PILOT FOR TA</span>
+    <main class="hero hub">
+      <section class="hero-copy hub-copy">
+        <span class="pill">AI CO-PILOT</span>
         <h1>
-          Get answers from the <span class="gradient-word">2026 Benchmark Report</span>
+          Ask the questions your ATS <span class="gradient-word">can’t answer</span>
         </h1>
         <p class="subtitle">
-          Explore insights from our annual Candidate Experience Benchmark Report
+          Get instant, AI-powered answers from candidate, recruiter and hiring manager feedback.
         </p>
-        <div id="ai-experience"></div>
+        <form class="hub-search" action="/benchmark.html" method="get">
+          <input
+            class="hub-search-input"
+            type="text"
+            name="q"
+            placeholder="Ask a question about your hiring experience..."
+            required
+          />
+          <button class="hub-send" type="submit" aria-label="Search benchmark report">➤</button>
+        </form>
+        <p class="try-asking">Try asking:</p>
+        <div class="questions hub-questions">
+          <article class="card"><span class="icon purple">◌</span><p>Where are candidates most likely to lose confidence?</p></article>
+          <article class="card"><span class="icon green">◔</span><p>Which hiring managers are slowing down our process — and why?</p></article>
+          <article class="card"><span class="icon amber">△</span><p>What are the top 3 issues hurting our hiring performance?</p></article>
+          <article class="card"><span class="icon blue">◫</span><p>Did our recent process changes improve the candidate experience?</p></article>
+          <article class="card"><span class="icon pink">✧</span><p>Which recruiters create the best candidate experience?</p></article>
+        </div>
+        <div class="hub-actions page-switcher">
+          <a class="page-switch-btn" href="/benchmark.html">Open Benchmark Report</a>
+          <a class="page-switch-btn" href="/analyzer.html">Open Career Page Analysis</a>
+        </div>
       </section>
     </main>
-
-    <footer class="site-footer">
-      <p>
-        Looking for company-level diagnostics?
-        <a href="/analyzer.html">Open the AI Analyzer →</a>
-      </p>
-    </footer>
-
-    <script type="module" src="./app.js"></script>
   </body>
 </html>

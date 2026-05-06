@@ -129,3 +129,9 @@ form.addEventListener("submit", async (event) => {
     setBusy(false);
   }
 });
+
+const initialQuestion = new URLSearchParams(window.location.search).get("q");
+if (initialQuestion && initialQuestion.trim()) {
+  input.value = initialQuestion.trim();
+  form.requestSubmit();
+}
