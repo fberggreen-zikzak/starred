@@ -37,8 +37,24 @@ export default function AnalyzerClient({ initialSnapshot = null, initialUrl = ""
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: url.trim() }),
       });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error ?? "Unable to generate snapshot.");
+      const contentType = response.headers.get("content-type") ?? "";
+      const isJson = contentType.includes("application/json");
+      const payload = isJson ? await response.json() : await response.text();
+
+      if (!response.ok) {
+        const message =
+          isJson && payload && typeof payload === "object" && "error" in payload
+            ? String(payload.error)
+            : typeof payload === "string" && payload.trim().length > 0
+              ? payload
+              : "Unable to generate snapshot.";
+        throw new Error(message);
+      }
+
+      if (!isJson || !payload || typeof payload !== "object" || !("snapshot" in payload)) {
+        throw new Error("Unexpected API response format.");
+      }
+
       setSnapshot(payload.snapshot as SnapshotResult);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to generate snapshot.");

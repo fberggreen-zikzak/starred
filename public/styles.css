@@ -412,35 +412,46 @@ body {
   text-decoration: none;
   text-align: center;
   min-height: 64px;
-  border-radius: 18px;
-  padding: 12px 18px;
-  background: #fff;
-  color: #24304b;
+  border-radius: 20px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 50%, #f2f7ff 100%);
+  color: #1e2a44;
   font-weight: 700;
   font-size: clamp(15px, 1.4vw, 20px);
   line-height: 1.2;
-  letter-spacing: -0.01em;
-  border: 1px solid #d0d8e5;
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
-  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  letter-spacing: -0.015em;
+  border: 1px solid #d9e4f2;
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.04),
+    0 14px 28px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(4px);
+  transition: transform 0.18s ease, box-shadow 0.22s ease, border-color 0.22s ease, color 0.18s ease;
 }
 
 .page-switcher .page-switch-btn:hover {
-  transform: translateY(-1px);
-  border-color: #b8c9df;
-  box-shadow: 0 10px 20px rgba(36, 48, 75, 0.1);
-  color: #24304b;
+  transform: translateY(-2px) scale(1.01);
+  border-color: #9cc7eb;
+  box-shadow:
+    0 8px 18px rgba(14, 116, 144, 0.1),
+    0 18px 30px rgba(15, 23, 42, 0.12);
+  color: #12203a;
 }
 
 .page-switcher .page-switch-btn:focus-visible {
-  outline: 2px solid #8edabc;
-  outline-offset: 2px;
+  outline: none;
+  border-color: #37b77d;
+  box-shadow:
+    0 0 0 3px rgba(55, 183, 125, 0.24),
+    0 14px 28px rgba(15, 23, 42, 0.1);
 }
 
 .page-switcher .page-switch-btn.is-active {
   background: #0f1118;
   color: #fff;
   border-color: #0f1118;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 28px rgba(15, 17, 24, 0.35);
   pointer-events: none;
 }
 
