@@ -21724,8 +21724,9 @@ var import_react4 = __toESM(require_react(), 1);
 // src/webapp/components/AnalyzerForm.tsx
 var import_react = __toESM(require_react(), 1);
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-function AnalyzerForm({ onSubmit }) {
+function AnalyzerForm({ onSubmit, showManualFallback = false }) {
   const [careerPageUrl, setCareerPageUrl] = (0, import_react.useState)("");
+  const [manualContent, setManualContent] = (0, import_react.useState)("");
   const [isSubmitting, setIsSubmitting] = (0, import_react.useState)(false);
   const [placeholderIndex, setPlaceholderIndex] = (0, import_react.useState)(0);
   const placeholders = ["https://company.com/careers", "https://miro.com/careers", "https://notion.so/careers"];
@@ -21769,8 +21770,7 @@ function AnalyzerForm({ onSubmit }) {
       ats: inferAts(normalized)
     };
   }
-  async function handleSubmit(event) {
-    event.preventDefault();
+  async function submitPayload(extra = {}) {
     const normalizedUrl = normalizeUrl(careerPageUrl);
     const extracted = captureFromCareerUrl(normalizedUrl);
     try {
@@ -21779,11 +21779,16 @@ function AnalyzerForm({ onSubmit }) {
         careerPageUrl: normalizedUrl,
         companyName: extracted.companyName,
         companyWebsite: extracted.companyWebsite,
-        ats: extracted.ats
+        ats: extracted.ats,
+        ...extra
       });
     } finally {
       setIsSubmitting(false);
     }
+  }
+  async function handleSubmit(event) {
+    event.preventDefault();
+    await submitPayload();
   }
   function looksLikeValidUrl(value) {
     if (!value.trim()) return false;
@@ -21829,7 +21834,29 @@ function AnalyzerForm({ onSubmit }) {
         }
       )
     ] }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "mt-1 text-xs text-slate-500", children: "Powered by public hiring signals and benchmark-informed AI analysis." })
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "mt-1 text-xs text-slate-500", children: "Powered by public hiring signals and benchmark-informed AI analysis." }),
+    showManualFallback && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mt-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-sm font-semibold text-amber-900", children: "Couldn't access the page automatically. Paste career page text instead." }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "textarea",
+        {
+          className: "mt-3 min-h-[120px] w-full rounded-xl border border-amber-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200",
+          placeholder: "Paste careers page content here...",
+          value: manualContent,
+          onChange: (event) => setManualContent(event.target.value)
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "button",
+        {
+          type: "button",
+          onClick: () => submitPayload({ manualContent }),
+          disabled: manualContent.trim().length < 80 || isSubmitting,
+          className: "mt-3 inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400",
+          children: "Generate snapshot from pasted text"
+        }
+      )
+    ] })
   ] }) });
 }
 
@@ -21995,10 +22022,9 @@ var import_react3 = __toESM(require_react(), 1);
 
 // src/webapp/data.ts
 var LOADING_STEPS = [
-  "Analyzing career page...",
-  "Detecting candidate-facing signals...",
-  "Comparing benchmark patterns...",
-  "Generating executive snapshot..."
+  "Opening careers page...",
+  "Reading public hiring signals...",
+  "Generating snapshot..."
 ];
 
 // src/webapp/components/LoadingState.tsx
@@ -22101,30 +22127,36 @@ function App() {
   const [state, setState] = (0, import_react4.useState)("idle");
   const [report, setReport] = (0, import_react4.useState)(null);
   const [error, setError] = (0, import_react4.useState)(null);
+  const [showManualFallback, setShowManualFallback] = (0, import_react4.useState)(false);
   async function handleGenerate(input) {
     setState("loading");
     setError(null);
     try {
-      const response = await fetch("/api/analyze", {
+      const response = await fetch("/api/analyze-url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: input.careerPageUrl, observedOnly: true })
+        body: JSON.stringify({ url: input.careerPageUrl, manualContent: input.manualContent })
       });
       const contentType = response.headers.get("content-type") ?? "";
       const isJson = contentType.includes("application/json");
       const payload = isJson ? await response.json() : await response.text();
       if (!response.ok) {
-        if (isJson && typeof payload === "object" && payload !== null && "error" in payload && payload.error) {
-          throw new Error(toUserFacingError(String(payload.error)));
+        if (isJson && typeof payload === "object" && payload !== null && "message" in payload) {
+          const errorPayload = payload;
+          if (["blocked", "no_content_found", "unsupported_page", "timeout"].includes(errorPayload.errorCode)) {
+            setShowManualFallback(true);
+          }
+          throw new Error(errorPayload.message);
         }
         if (typeof payload === "string" && payload.trim().length > 0) {
           throw new Error(toUserFacingError(payload));
         }
         throw new Error("Unable to analyze this careers page right now. Please try another URL.");
       }
-      if (!isJson || typeof payload !== "object" || payload === null || !("snapshot" in payload)) {
+      if (!isJson || typeof payload !== "object" || payload === null || !("snapshot" in payload) || !("success" in payload)) {
         throw new Error("Unexpected API response format.");
       }
+      setShowManualFallback(false);
       setReport(buildReportFromSnapshot(payload.snapshot));
       setState("report");
     } catch (err) {
@@ -22135,11 +22167,12 @@ function App() {
   function handleReset() {
     setReport(null);
     setState("idle");
+    setShowManualFallback(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("section", { className: "mx-auto max-w-6xl rounded-[28px] border border-white/80 bg-gradient-to-br from-emerald-50/95 via-cyan-50/90 to-slate-100/95 px-4 py-8 shadow-xl shadow-slate-900/10 backdrop-blur md:px-8 md:py-14", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "mx-auto max-w-[58rem]", children: [
     state !== "report" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Hero, {}),
-    state === "idle" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AnalyzerForm, { onSubmit: handleGenerate }),
+    state === "idle" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AnalyzerForm, { onSubmit: handleGenerate, showManualFallback }),
     state === "loading" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LoadingState, {}),
     state === "idle" && error && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "mx-auto mt-4 max-w-4xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700", children: [
       /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: error }),

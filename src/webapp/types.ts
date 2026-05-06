@@ -12,6 +12,7 @@ export type FormData = {
   companyName: string;
   companyWebsite: string;
   ats: AtsOption;
+  manualContent?: string;
 };
 
 export type RiskItem = {

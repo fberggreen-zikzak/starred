@@ -3,10 +3,12 @@ import { FormData } from "../types";
 
 type AnalyzerFormProps = {
   onSubmit: (payload: FormData) => void | Promise<void>;
+  showManualFallback?: boolean;
 };
 
-export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
+export function AnalyzerForm({ onSubmit, showManualFallback = false }: AnalyzerFormProps): JSX.Element {
   const [careerPageUrl, setCareerPageUrl] = useState("");
+  const [manualContent, setManualContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const placeholders = ["https://company.com/careers", "https://miro.com/careers", "https://notion.so/careers"];
@@ -61,8 +63,7 @@ export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
     };
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault();
+  async function submitPayload(extra: Partial<FormData> = {}): Promise<void> {
     const normalizedUrl = normalizeUrl(careerPageUrl);
     const extracted = captureFromCareerUrl(normalizedUrl);
     try {
@@ -72,10 +73,16 @@ export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
         companyName: extracted.companyName,
         companyWebsite: extracted.companyWebsite,
         ats: extracted.ats,
+        ...extra,
       });
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    await submitPayload();
   }
 
   function looksLikeValidUrl(value: string): boolean {
@@ -126,6 +133,26 @@ export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
         </div>
 
         <p className="mt-1 text-xs text-slate-500">Powered by public hiring signals and benchmark-informed AI analysis.</p>
+
+        {showManualFallback && (
+          <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4">
+            <p className="text-sm font-semibold text-amber-900">Couldn&apos;t access the page automatically. Paste career page text instead.</p>
+            <textarea
+              className="mt-3 min-h-[120px] w-full rounded-xl border border-amber-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200"
+              placeholder="Paste careers page content here..."
+              value={manualContent}
+              onChange={(event) => setManualContent(event.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => submitPayload({ manualContent })}
+              disabled={manualContent.trim().length < 80 || isSubmitting}
+              className="mt-3 inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+            >
+              Generate snapshot from pasted text
+            </button>
+          </div>
+        )}
       </form>
     </section>
   );

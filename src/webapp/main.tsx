@@ -31,7 +31,18 @@ type ApiSnapshot = {
 };
 
 type AnalyzeApiPayload = {
+  success: true;
+  finalUrl: string;
+  title: string;
+  text: string;
+  signals: Record<string, unknown>;
   snapshot: ApiSnapshot;
+};
+
+type AnalyzeUrlErrorPayload = {
+  success: false;
+  errorCode: "invalid_url" | "timeout" | "blocked" | "no_content_found" | "unsupported_page" | "unknown";
+  message: string;
 };
 
 function toUserFacingError(message: string): string {
@@ -116,23 +127,28 @@ function App(): JSX.Element {
   const [state, setState] = useState<AppState>("idle");
   const [report, setReport] = useState<SnapshotReport | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showManualFallback, setShowManualFallback] = useState(false);
 
   async function handleGenerate(input: FormData): Promise<void> {
     setState("loading");
     setError(null);
     try {
-      const response = await fetch("/api/analyze", {
+      const response = await fetch("/api/analyze-url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: input.careerPageUrl, observedOnly: true }),
+        body: JSON.stringify({ url: input.careerPageUrl, manualContent: input.manualContent }),
       });
       const contentType = response.headers.get("content-type") ?? "";
       const isJson = contentType.includes("application/json");
-      const payload = (isJson ? await response.json() : await response.text()) as AnalyzeApiPayload | { error?: string } | string;
+      const payload = (isJson ? await response.json() : await response.text()) as AnalyzeApiPayload | AnalyzeUrlErrorPayload | string;
 
       if (!response.ok) {
-        if (isJson && typeof payload === "object" && payload !== null && "error" in payload && payload.error) {
-          throw new Error(toUserFacingError(String(payload.error)));
+        if (isJson && typeof payload === "object" && payload !== null && "message" in payload) {
+          const errorPayload = payload as AnalyzeUrlErrorPayload;
+          if (["blocked", "no_content_found", "unsupported_page", "timeout"].includes(errorPayload.errorCode)) {
+            setShowManualFallback(true);
+          }
+          throw new Error(errorPayload.message);
         }
         if (typeof payload === "string" && payload.trim().length > 0) {
           throw new Error(toUserFacingError(payload));
@@ -140,9 +156,10 @@ function App(): JSX.Element {
         throw new Error("Unable to analyze this careers page right now. Please try another URL.");
       }
 
-      if (!isJson || typeof payload !== "object" || payload === null || !("snapshot" in payload)) {
+      if (!isJson || typeof payload !== "object" || payload === null || !("snapshot" in payload) || !("success" in payload)) {
         throw new Error("Unexpected API response format.");
       }
+      setShowManualFallback(false);
       setReport(buildReportFromSnapshot(payload.snapshot));
       setState("report");
     } catch (err) {
@@ -154,6 +171,7 @@ function App(): JSX.Element {
   function handleReset(): void {
     setReport(null);
     setState("idle");
+    setShowManualFallback(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -161,7 +179,7 @@ function App(): JSX.Element {
     <section className="mx-auto max-w-6xl rounded-[28px] border border-white/80 bg-gradient-to-br from-emerald-50/95 via-cyan-50/90 to-slate-100/95 px-4 py-8 shadow-xl shadow-slate-900/10 backdrop-blur md:px-8 md:py-14">
       <div className="mx-auto max-w-[58rem]">
         {state !== "report" && <Hero />}
-        {state === "idle" && <AnalyzerForm onSubmit={handleGenerate} />}
+        {state === "idle" && <AnalyzerForm onSubmit={handleGenerate} showManualFallback={showManualFallback} />}
         {state === "loading" && <LoadingState />}
         {state === "idle" && error && (
           <div className="mx-auto mt-4 max-w-4xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
