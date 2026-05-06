@@ -147,7 +147,10 @@ function App(): JSX.Element {
         {state === "idle" && <AnalyzerForm onSubmit={handleGenerate} />}
         {state === "loading" && <LoadingState />}
         {state === "idle" && error && (
-          <p className="mx-auto mt-4 max-w-4xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p>
+          <div className="mx-auto mt-4 max-w-4xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            <p>{error}</p>
+            <p className="mt-1 text-xs text-rose-600">Try this format: https://company.com/careers</p>
+          </div>
         )}
         {state === "report" && report && <AnalysisReport report={report} onReset={handleReset} />}
       </div>

@@ -22125,7 +22125,10 @@ function App() {
     state !== "report" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Hero, {}),
     state === "idle" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AnalyzerForm, { onSubmit: handleGenerate }),
     state === "loading" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(LoadingState, {}),
-    state === "idle" && error && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "mx-auto mt-4 max-w-4xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700", children: error }),
+    state === "idle" && error && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "mx-auto mt-4 max-w-4xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { children: error }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("p", { className: "mt-1 text-xs text-rose-600", children: "Try this format: https://company.com/careers" })
+    ] }),
     state === "report" && report && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(AnalysisReport, { report, onReset: handleReset })
   ] }) });
 }
