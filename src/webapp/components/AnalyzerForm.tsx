@@ -77,25 +77,31 @@ export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
   const isValid = looksLikeValidUrl(careerPageUrl);
 
   return (
-    <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-xl shadow-emerald-900/10 backdrop-blur md:p-8">
-      <form className="grid gap-4" onSubmit={handleSubmit}>
-        <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+    <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-8">
+      <form className="grid gap-5" onSubmit={handleSubmit}>
+        <label className="flex flex-col gap-2 text-sm font-semibold text-slate-700">
           Career page URL
           <input
-            className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none ring-emerald-500 transition focus:border-emerald-500 focus:ring"
+            className="rounded-2xl border border-slate-300 bg-white px-5 py-3.5 text-base text-slate-900 outline-none ring-emerald-500 transition focus:border-emerald-500 focus:ring"
             value={careerPageUrl}
             onChange={(event) => setCareerPageUrl(event.target.value)}
             placeholder="https://company.com/careers"
             required
           />
         </label>
-        <p className="text-xs text-slate-500">
+
+        <div className="flex flex-wrap gap-2 text-xs">
+          <span className="rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700">Based on public signals</span>
+          <span className="rounded-full bg-cyan-50 px-2.5 py-1 font-semibold text-cyan-700">Executive summary format</span>
+        </div>
+
+        <p className="text-xs leading-relaxed text-slate-500">
           Public signals only. Snapshot language is directional and may indicate potential gaps.
         </p>
 
-        <div className="mt-2">
+        <div className="mt-1">
           <button
-            className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 md:w-auto"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 md:w-auto"
             type="submit"
             disabled={!isValid}
           >

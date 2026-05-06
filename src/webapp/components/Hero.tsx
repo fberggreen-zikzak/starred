@@ -6,7 +6,7 @@ export function Hero(): JSX.Element {
           href="/"
           className="inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
         >
-          ← Go back to Benchmark page
+          ← Go back
         </a>
       </div>
       <p className="inline-flex rounded-full border border-emerald-200 bg-white/70 px-3 py-1 text-xs font-medium uppercase tracking-wide text-emerald-700">
