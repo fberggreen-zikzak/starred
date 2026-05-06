@@ -34,6 +34,23 @@ type AnalyzeApiPayload = {
   snapshot: ApiSnapshot;
 };
 
+function toUserFacingError(message: string): string {
+  const lower = message.toLowerCase();
+  if (lower.includes("not_found") || lower.includes("not found") || lower.includes("404")) {
+    return "We could not access that careers page. Please verify the URL and try again.";
+  }
+  if (lower.includes("timeout") || lower.includes("timed out")) {
+    return "The careers page took too long to respond. Please try again in a moment.";
+  }
+  if (lower.includes("econnrefused") || lower.includes("enotfound") || lower.includes("failed to fetch")) {
+    return "We could not reach that careers page. Please check the URL and try again.";
+  }
+  if (lower.includes("403") || lower.includes("forbidden") || lower.includes("blocked")) {
+    return "That careers page blocks automated access. Try a different careers page URL.";
+  }
+  return "Unable to analyze this careers page right now. Please try another URL.";
+}
+
 function toAtsOption(value: string): SnapshotReport["ats"] {
   if (value === "Greenhouse" || value === "Lever" || value === "Workday" || value === "SmartRecruiters" || value === "iCIMS" || value === "Jobvite") {
     return value;
@@ -115,12 +132,12 @@ function App(): JSX.Element {
 
       if (!response.ok) {
         if (isJson && typeof payload === "object" && payload !== null && "error" in payload && payload.error) {
-          throw new Error(String(payload.error));
+          throw new Error(toUserFacingError(String(payload.error)));
         }
         if (typeof payload === "string" && payload.trim().length > 0) {
-          throw new Error(payload);
+          throw new Error(toUserFacingError(payload));
         }
-        throw new Error("Unable to analyze career page.");
+        throw new Error("Unable to analyze this careers page right now. Please try another URL.");
       }
 
       if (!isJson || typeof payload !== "object" || payload === null || !("snapshot" in payload)) {

@@ -112,6 +112,7 @@ function heuristicScorecards(signals: ExtractedSignals) {
 function fallbackSnapshot(signals: ExtractedSignals): SnapshotResult {
   const scorecards = heuristicScorecards(signals);
   const avgScore = Math.round(scorecards.reduce((sum, card) => sum + card.score, 0) / scorecards.length);
+  const limitedCoverage = signals.rawTextSample.length < 240;
 
   return {
     companyName: signals.companyName,
@@ -120,44 +121,47 @@ function fallbackSnapshot(signals: ExtractedSignals): SnapshotResult {
     hiringMaturity: avgScore >= 70 ? "Mature" : avgScore >= 54 ? "Developing" : "Emerging",
     benchmarkCohort: "Enterprise TA teams",
     benchmarkSimilarity: `${72 + ((scorecards[0]?.score ?? 60) % 18)}% similarity to benchmark cohort`,
-    executiveSummary: `${signals.companyName} shows directional hiring maturity signals, while benchmark-informed interpretation suggests candidate trust may weaken during interview handoffs and post-application communication windows.`,
+    executiveSummary: limitedCoverage
+      ? `${signals.companyName} has limited publicly retrievable hiring-page coverage from this URL, so findings should be treated as directional only until additional public evidence is available.`
+      : `${signals.companyName} shows directional hiring maturity signals, while benchmark-informed interpretation suggests candidate trust may weaken during interview handoffs and post-application communication windows.`,
     observedPublicSignals: [
-      signals.timelineMentions[0]
-        ? "Public page surfaces limited timeline expectations."
-        : "Public page does not surface interview timeline expectations.",
-      signals.recruiterVisibility[0]
-        ? "Recruiter ownership appears referenced but not consistently visible."
-        : "Recruiter ownership is not visible across public touchpoints.",
-      signals.processTransparency[0]
-        ? "Process transparency appears partially visible across the page."
-        : "Careers page lacks clear process transparency details.",
-      signals.interviewGuidance[0]
-        ? "Candidate preparation guidance appears lightweight."
-        : "Candidate preparation guidance is not clearly visible.",
-      signals.atsProvider.includes("Not")
-        ? "Application flow appears external with limited context continuity."
-        : `ATS flow appears tied to ${signals.atsProvider}, which may indicate speed priority over transparency.`,
+      ...(limitedCoverage
+        ? [
+            "Limited public content could be retrieved from the submitted careers URL.",
+            "Findings are based on partial public evidence and should be validated with additional pages.",
+          ]
+        : []),
+      ...(signals.timelineMentions[0] ? ["Public page surfaces limited timeline expectations."] : []),
+      ...(signals.recruiterVisibility[0] ? ["Recruiter ownership appears referenced but not consistently visible."] : []),
+      ...(signals.processTransparency[0] ? ["Process transparency appears partially visible across the page."] : []),
+      ...(signals.interviewGuidance[0] ? ["Candidate preparation guidance appears lightweight."] : []),
+      ...(signals.atsProvider.includes("Not")
+        ? []
+        : [`ATS flow appears tied to ${signals.atsProvider}, which may indicate speed priority over transparency.`]),
     ],
     benchmarkComparison: [
       { metric: "Communication transparency", symbol: "↓", position: "Below benchmark" },
       { metric: "Application simplicity", symbol: "≈", position: "Near benchmark" },
       { metric: "Employer branding consistency", symbol: "↑", position: "Above benchmark" },
     ],
-    trustMoments: ["After application submission", "Between interview rounds", "Post-final interview communication"],
+    trustMoments: limitedCoverage
+      ? ["Validation recommended with additional public job pages", "Check interview-stage communication visibility manually"]
+      : ["After application submission", "Between interview rounds", "Post-final interview communication"],
     recommendedFocusAreas: [
       "Improve interview timeline transparency",
       "Reduce silence between interview rounds",
       "Clarify recruiter ownership",
       "Set candidate expectations earlier",
     ],
-    strengths: [
-      "Employer branding visibility appears established.",
-      "Process structure signals suggest baseline hiring maturity.",
-    ],
-    potentialGaps: [
-      "Communication expectations may indicate gaps after application submission.",
-      "Candidate guidance appears limited around interview progression.",
-    ],
+    strengths: limitedCoverage
+      ? ["Signal extraction pipeline resolved the target URL and attempted public coverage discovery."]
+      : ["Employer branding visibility appears established.", "Process structure signals suggest baseline hiring maturity."],
+    potentialGaps: limitedCoverage
+      ? ["Public evidence volume is limited for this specific URL."]
+      : [
+          "Communication expectations may indicate gaps after application submission.",
+          "Candidate guidance appears limited around interview progression.",
+        ],
     scorecards,
   };
 }
