@@ -5,11 +5,11 @@ export function Hero(): JSX.Element {
         Hiring Experience Analyzer
       </p>
       <h1 className="mx-auto mt-5 max-w-4xl text-3xl font-semibold leading-tight text-slate-900 md:text-5xl">
-        Uncover the hiring experience signals candidates already see
+        Analyze the candidate experience on your careers page
       </h1>
-      <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-slate-700 md:text-lg">
-        Generate an AI-powered snapshot of public hiring touchpoints, potential friction points, and areas where
-        candidate trust may be lost.
+      <p className="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
+        See your careers page through a candidate&apos;s eyes. AI reviews your public careers page and hiring flow to
+        highlight where candidates may face friction, uncertainty, or missing information.
       </p>
     </section>
   );

@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { FormData } from "../types";
 
 type AnalyzerFormProps = {
@@ -7,6 +7,16 @@ type AnalyzerFormProps = {
 
 export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
   const [careerPageUrl, setCareerPageUrl] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const placeholders = ["https://company.com/careers", "https://miro.com/careers", "https://notion.so/careers"];
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
+    }, 2600);
+    return () => window.clearInterval(interval);
+  }, [placeholders.length]);
 
   function normalizeUrl(value: string): string {
     const trimmed = value.trim();
@@ -51,16 +61,21 @@ export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
     };
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const normalizedUrl = normalizeUrl(careerPageUrl);
     const extracted = captureFromCareerUrl(normalizedUrl);
-    onSubmit({
-      careerPageUrl: normalizedUrl,
-      companyName: extracted.companyName,
-      companyWebsite: extracted.companyWebsite,
-      ats: extracted.ats,
-    });
+    try {
+      setIsSubmitting(true);
+      await onSubmit({
+        careerPageUrl: normalizedUrl,
+        companyName: extracted.companyName,
+        companyWebsite: extracted.companyWebsite,
+        ats: extracted.ats,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   function looksLikeValidUrl(value: string): boolean {
@@ -77,37 +92,40 @@ export function AnalyzerForm({ onSubmit }: AnalyzerFormProps): JSX.Element {
   const isValid = looksLikeValidUrl(careerPageUrl);
 
   return (
-    <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-10">
-      <form className="grid gap-6" onSubmit={handleSubmit}>
+    <section className="mx-auto w-full max-w-5xl rounded-[30px] border border-white/80 bg-gradient-to-br from-white/90 via-cyan-50/70 to-emerald-50/75 p-5 shadow-2xl shadow-emerald-900/10 ring-1 ring-white/80 backdrop-blur-xl md:p-7">
+      <form className="grid gap-4" onSubmit={handleSubmit}>
         <div className="text-left">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Start here</p>
-          <p className="mt-1 text-sm text-slate-600">Enter a career page URL to generate an executive-ready directional snapshot.</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">Start here</p>
+          <p className="mt-1.5 text-base font-medium leading-relaxed text-slate-700">
+            Paste a careers page URL to uncover candidate-facing hiring signals, communication gaps, and trust friction.
+          </p>
         </div>
-        <label className="flex flex-col gap-2 text-sm font-semibold text-slate-700">
-          Career page URL
-          <input
-            className="rounded-2xl border border-slate-300 bg-white px-5 py-3.5 text-base text-slate-900 outline-none ring-emerald-500 transition placeholder:text-slate-400 hover:border-slate-400 focus:border-emerald-500 focus:ring"
-            value={careerPageUrl}
-            onChange={(event) => setCareerPageUrl(event.target.value)}
-            placeholder="https://company.com/careers"
-            required
-          />
-        </label>
 
-        <p className="text-xs leading-relaxed text-slate-500">
-          Uses publicly available hiring signals only. Results are directional and intended to highlight potential gaps.
-        </p>
-
-        <div className="mt-1 flex items-center justify-between gap-3">
-          <p className="text-xs text-slate-400">~2 seconds to generate</p>
-          <button
-            className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
-            type="submit"
-            disabled={!isValid}
-          >
-            Generate report
-          </button>
+        <label className="text-sm font-semibold text-slate-700">Career page URL</label>
+        <div className="rounded-2xl border border-slate-200/90 bg-white/90 p-2 shadow-[0_10px_30px_rgba(15,23,42,0.08)] transition hover:border-slate-300 focus-within:border-emerald-400 focus-within:shadow-[0_0_0_4px_rgba(16,185,129,0.16)]">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="relative flex-1">
+              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔗</span>
+              <input
+                className="w-full rounded-xl border border-transparent bg-transparent py-3 pl-11 pr-3 text-[15px] text-slate-900 outline-none placeholder:text-slate-400"
+                value={careerPageUrl}
+                onChange={(event) => setCareerPageUrl(event.target.value)}
+                placeholder={placeholders[placeholderIndex]}
+                required
+              />
+            </div>
+            <button
+              className="inline-flex min-w-[210px] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/25 transition hover:-translate-y-0.5 hover:from-slate-800 hover:to-slate-600 disabled:cursor-not-allowed disabled:from-slate-400 disabled:to-slate-400"
+              type="submit"
+              disabled={!isValid || isSubmitting}
+            >
+              {isSubmitting ? "Analyzing careers page..." : "Generate AI snapshot"}
+              {!isSubmitting && <span aria-hidden>→</span>}
+            </button>
+          </div>
         </div>
+
+        <p className="mt-1 text-xs text-slate-500">Powered by public hiring signals and benchmark-informed AI analysis.</p>
       </form>
     </section>
   );

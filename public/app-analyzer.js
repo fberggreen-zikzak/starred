@@ -21726,6 +21726,15 @@ var import_react = __toESM(require_react(), 1);
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
 function AnalyzerForm({ onSubmit }) {
   const [careerPageUrl, setCareerPageUrl] = (0, import_react.useState)("");
+  const [isSubmitting, setIsSubmitting] = (0, import_react.useState)(false);
+  const [placeholderIndex, setPlaceholderIndex] = (0, import_react.useState)(0);
+  const placeholders = ["https://company.com/careers", "https://miro.com/careers", "https://notion.so/careers"];
+  (0, import_react.useEffect)(() => {
+    const interval = window.setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
+    }, 2600);
+    return () => window.clearInterval(interval);
+  }, [placeholders.length]);
   function normalizeUrl(value) {
     const trimmed = value.trim();
     if (!trimmed) return "";
@@ -21760,16 +21769,21 @@ function AnalyzerForm({ onSubmit }) {
       ats: inferAts(normalized)
     };
   }
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     const normalizedUrl = normalizeUrl(careerPageUrl);
     const extracted = captureFromCareerUrl(normalizedUrl);
-    onSubmit({
-      careerPageUrl: normalizedUrl,
-      companyName: extracted.companyName,
-      companyWebsite: extracted.companyWebsite,
-      ats: extracted.ats
-    });
+    try {
+      setIsSubmitting(true);
+      await onSubmit({
+        careerPageUrl: normalizedUrl,
+        companyName: extracted.companyName,
+        companyWebsite: extracted.companyWebsite,
+        ats: extracted.ats
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
   function looksLikeValidUrl(value) {
     if (!value.trim()) return false;
@@ -21782,37 +21796,40 @@ function AnalyzerForm({ onSubmit }) {
     }
   }
   const isValid = looksLikeValidUrl(careerPageUrl);
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", { className: "mx-auto w-full max-w-4xl rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/70 backdrop-blur md:p-10", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", { className: "grid gap-6", onSubmit: handleSubmit, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", { className: "mx-auto w-full max-w-5xl rounded-[30px] border border-white/80 bg-gradient-to-br from-white/90 via-cyan-50/70 to-emerald-50/75 p-5 shadow-2xl shadow-emerald-900/10 ring-1 ring-white/80 backdrop-blur-xl md:p-7", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", { className: "grid gap-4", onSubmit: handleSubmit, children: [
     /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-left", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs font-semibold uppercase tracking-wide text-emerald-700", children: "Start here" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "mt-1 text-sm text-slate-600", children: "Enter a career page URL to generate an executive-ready directional snapshot." })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700", children: "Start here" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "mt-1.5 text-base font-medium leading-relaxed text-slate-700", children: "Paste a careers page URL to uncover candidate-facing hiring signals, communication gaps, and trust friction." })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", { className: "flex flex-col gap-2 text-sm font-semibold text-slate-700", children: [
-      "Career page URL",
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-        "input",
-        {
-          className: "rounded-2xl border border-slate-300 bg-white px-5 py-3.5 text-base text-slate-900 outline-none ring-emerald-500 transition placeholder:text-slate-400 hover:border-slate-400 focus:border-emerald-500 focus:ring",
-          value: careerPageUrl,
-          onChange: (event) => setCareerPageUrl(event.target.value),
-          placeholder: "https://company.com/careers",
-          required: true
-        }
-      )
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs leading-relaxed text-slate-500", children: "Uses publicly available hiring signals only. Results are directional and intended to highlight potential gaps." }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mt-1 flex items-center justify-between gap-3", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs text-slate-400", children: "~2 seconds to generate" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "text-sm font-semibold text-slate-700", children: "Career page URL" }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "rounded-2xl border border-slate-200/90 bg-white/90 p-2 shadow-[0_10px_30px_rgba(15,23,42,0.08)] transition hover:border-slate-300 focus-within:border-emerald-400 focus-within:shadow-[0_0_0_4px_rgba(16,185,129,0.16)]", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-col gap-2 sm:flex-row sm:items-center", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "relative flex-1", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400", children: "\u{1F517}" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "input",
+          {
+            className: "w-full rounded-xl border border-transparent bg-transparent py-3 pl-11 pr-3 text-[15px] text-slate-900 outline-none placeholder:text-slate-400",
+            value: careerPageUrl,
+            onChange: (event) => setCareerPageUrl(event.target.value),
+            placeholder: placeholders[placeholderIndex],
+            required: true
+          }
+        )
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
         "button",
         {
-          className: "inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto",
+          className: "inline-flex min-w-[210px] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/25 transition hover:-translate-y-0.5 hover:from-slate-800 hover:to-slate-600 disabled:cursor-not-allowed disabled:from-slate-400 disabled:to-slate-400",
           type: "submit",
-          disabled: !isValid,
-          children: "Generate report"
+          disabled: !isValid || isSubmitting,
+          children: [
+            isSubmitting ? "Analyzing careers page..." : "Generate AI snapshot",
+            !isSubmitting && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { "aria-hidden": true, children: "\u2192" })
+          ]
         }
       )
-    ] })
+    ] }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "mt-1 text-xs text-slate-500", children: "Powered by public hiring signals and benchmark-informed AI analysis." })
   ] }) });
 }
 
@@ -21968,8 +21985,8 @@ var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
 function Hero() {
   return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("section", { className: "mb-9 text-center md:mb-11", children: [
     /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "inline-flex rounded-full border border-emerald-200 bg-white/70 px-3 py-1 text-xs font-medium uppercase tracking-wide text-emerald-700", children: "Hiring Experience Analyzer" }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h1", { className: "mx-auto mt-5 max-w-4xl text-3xl font-semibold leading-tight text-slate-900 md:text-5xl", children: "Uncover the hiring experience signals candidates already see" }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "mx-auto mt-5 max-w-3xl text-base leading-relaxed text-slate-700 md:text-lg", children: "Generate an AI-powered snapshot of public hiring touchpoints, potential friction points, and areas where candidate trust may be lost." })
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h1", { className: "mx-auto mt-5 max-w-4xl text-3xl font-semibold leading-tight text-slate-900 md:text-5xl", children: "Analyze the candidate experience on your careers page" }),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base", children: "See your careers page through a candidate's eyes. AI reviews your public careers page and hiring flow to highlight where candidates may face friction, uncertainty, or missing information." })
   ] });
 }
 
@@ -21994,12 +22011,22 @@ function LoadingState() {
     }, 650);
     return () => window.clearInterval(interval);
   }, []);
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("section", { className: "mx-auto mt-10 w-full max-w-3xl rounded-3xl border border-slate-200 bg-white/90 p-8 text-center shadow-xl shadow-emerald-900/10 backdrop-blur", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "mx-auto mb-5 h-10 w-10 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm font-semibold uppercase tracking-wide text-emerald-700", children: "Generating hiring snapshot" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mt-3 text-lg text-slate-800", children: LOADING_STEPS[stepIndex] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mt-2 text-sm text-slate-500", children: "This takes about 2 seconds." })
-  ] });
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("section", { className: "mx-auto mt-6 w-full max-w-5xl rounded-[30px] border border-white/80 bg-gradient-to-br from-white/90 via-cyan-50/70 to-emerald-50/75 p-7 shadow-2xl shadow-emerald-900/10 ring-1 ring-white/80 backdrop-blur-xl", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-start gap-4", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "mt-1 h-10 w-10 shrink-0 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600" }),
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "w-full", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-sm font-semibold uppercase tracking-wide text-emerald-700", children: "AI analysis in progress" }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mt-1 text-lg font-medium text-slate-900", children: LOADING_STEPS[stepIndex] }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "mt-4 space-y-2", children: LOADING_STEPS.map((step, index) => /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        "div",
+        {
+          className: `rounded-lg px-3 py-2 text-sm transition ${index <= stepIndex ? "bg-white/90 text-slate-700 shadow-sm" : "bg-white/50 text-slate-400"}`,
+          children: step
+        },
+        step
+      )) }),
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "mt-3 text-xs text-slate-500", children: "Streaming insights as signals are detected." })
+    ] })
+  ] }) });
 }
 
 // src/webapp/main.tsx
@@ -22067,9 +22094,20 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: input.careerPageUrl, observedOnly: true })
       });
-      const payload = await response.json();
-      if (!response.ok || !("snapshot" in payload)) {
-        throw new Error("error" in payload && payload.error ? payload.error : "Unable to analyze career page.");
+      const contentType = response.headers.get("content-type") ?? "";
+      const isJson = contentType.includes("application/json");
+      const payload = isJson ? await response.json() : await response.text();
+      if (!response.ok) {
+        if (isJson && typeof payload === "object" && payload !== null && "error" in payload && payload.error) {
+          throw new Error(String(payload.error));
+        }
+        if (typeof payload === "string" && payload.trim().length > 0) {
+          throw new Error(payload);
+        }
+        throw new Error("Unable to analyze career page.");
+      }
+      if (!isJson || typeof payload !== "object" || payload === null || !("snapshot" in payload)) {
+        throw new Error("Unexpected API response format.");
       }
       setReport(buildReportFromSnapshot(payload.snapshot));
       setState("report");

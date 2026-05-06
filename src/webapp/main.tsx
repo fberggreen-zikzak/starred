@@ -109,9 +109,22 @@ function App(): JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: input.careerPageUrl, observedOnly: true }),
       });
-      const payload = (await response.json()) as AnalyzeApiPayload | { error?: string };
-      if (!response.ok || !("snapshot" in payload)) {
-        throw new Error("error" in payload && payload.error ? payload.error : "Unable to analyze career page.");
+      const contentType = response.headers.get("content-type") ?? "";
+      const isJson = contentType.includes("application/json");
+      const payload = (isJson ? await response.json() : await response.text()) as AnalyzeApiPayload | { error?: string } | string;
+
+      if (!response.ok) {
+        if (isJson && typeof payload === "object" && payload !== null && "error" in payload && payload.error) {
+          throw new Error(String(payload.error));
+        }
+        if (typeof payload === "string" && payload.trim().length > 0) {
+          throw new Error(payload);
+        }
+        throw new Error("Unable to analyze career page.");
+      }
+
+      if (!isJson || typeof payload !== "object" || payload === null || !("snapshot" in payload)) {
+        throw new Error("Unexpected API response format.");
       }
       setReport(buildReportFromSnapshot(payload.snapshot));
       setState("report");
