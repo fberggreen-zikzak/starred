@@ -58,16 +58,16 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
         </p>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-[#dfe8e4]/5 px-3.5 py-3 sm:min-h-[380px] sm:px-6 sm:py-4">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-[#dfe8e4]/5 px-3 py-3 sm:min-h-[380px] sm:px-6 sm:py-4">
         <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#0d3d2e]/55 sm:mb-2.5 sm:text-[10px] sm:tracking-[0.14em]">
           SELECTED AGENT
         </p>
         <p className="mb-3 text-[12px] font-semibold text-[#0d3d2e] sm:mb-3.5 sm:text-[13px]">{fullAgentName}</p>
 
-        <article className="relative flex-1 rounded-xl border border-[#0d3d2e]/12 bg-white px-3.5 py-3.5 shadow-[0_2px_8px_rgba(13,61,46,0.05)] transition hover:shadow-[0_10px_26px_rgba(13,61,46,0.1)] sm:px-5 sm:py-4.5">
+        <article className="relative rounded-xl border border-[#0d3d2e]/12 bg-white px-3 py-3.5 shadow-[0_2px_8px_rgba(13,61,46,0.05)] transition hover:shadow-[0_10px_26px_rgba(13,61,46,0.1)] sm:flex-1 sm:px-5 sm:py-4.5">
           <span className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-full bg-[#5dbea5]/75" aria-hidden />
 
-          <div className="flex h-full flex-col pl-2.5">
+          <div className="flex flex-col pl-2.5 sm:h-full">
             <div className="flex items-start justify-between gap-2">
               <h4 className="text-[15px] font-semibold leading-snug tracking-tight text-[#0d3d2e] sm:text-[16px]">{title}</h4>
               <span className="shrink-0 rounded-full bg-[#fdf6e8] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[#6a5220] ring-1 ring-[#e8d4a8]/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]">
@@ -103,8 +103,8 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
               </div>
             </div>
 
-            <div className="mt-auto pt-3 sm:pt-4">
-              <div className="grid grid-cols-1 gap-2 border-t border-[#0d3d2e]/8 pt-3 text-[11px] sm:grid-cols-2 sm:gap-3">
+            <div className="mt-3 border-t border-[#0d3d2e]/8 pt-3 sm:mt-auto sm:border-t-0 sm:pt-4">
+              <div className="grid grid-cols-1 gap-2 text-[11px] sm:grid-cols-2 sm:gap-3">
                 <p className="min-w-0 text-[#5c6f66]">
                 Owner: <span className="font-semibold text-[#0d3d2e]">{owner}</span>
                 </p>
