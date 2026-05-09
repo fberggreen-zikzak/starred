@@ -47,8 +47,6 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
       ? "Review recent candidate comments, identify the teams or stages driving the trend, and align recruiters on follow-up expectations."
       : defaultRecommendedAction(agent?.monitorsSignals ?? "recent signal patterns", agent?.alertTrigger ?? "risk conditions");
 
-  const channel = severity === "High" ? "Slack + Email" : "Email + Dashboard";
-
   return (
     <aside className="flex w-full shrink-0 flex-col border-t border-[#0d3d2e]/12 bg-[#e8edea] lg:w-[360px] lg:border-l lg:border-t-0 xl:w-[390px]">
       <div className="shrink-0 border-b border-[#0d3d2e]/12 bg-[#f2f5f3] px-4 py-3.5 sm:px-7 sm:py-5">
@@ -91,16 +89,27 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
               <p className="mt-1.5 text-[11px] leading-relaxed text-[#0d3d2e]/92 sm:text-[12px]">{recommendedAction}</p>
             </div>
 
+            <div className="mt-3 sm:mt-3.5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#4a5e56]">DELIVERED TO</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {deliveryChannels.map((ch) => (
+                  <span
+                    key={ch}
+                    className="inline-flex rounded-full border border-[#0d3d2e]/12 bg-[#f4f7f5] px-2.5 py-1 text-[10px] font-medium text-[#0d3d2e]"
+                  >
+                    {ch}
+                  </span>
+                ))}
+              </div>
+            </div>
+
             <div className="mt-auto pt-3 sm:pt-4">
-              <div className="grid grid-cols-1 gap-2 border-t border-[#0d3d2e]/8 pt-3 text-[11px] sm:grid-cols-3 sm:gap-3">
+              <div className="grid grid-cols-1 gap-2 border-t border-[#0d3d2e]/8 pt-3 text-[11px] sm:grid-cols-2 sm:gap-3">
                 <p className="min-w-0 text-[#5c6f66]">
                 Owner: <span className="font-semibold text-[#0d3d2e]">{owner}</span>
                 </p>
                 <p className="min-w-0 text-[#5c6f66]">
                   Agent: <span className="font-semibold text-[#1f6b52]">{agentLabel}</span>
-                </p>
-                <p className="min-w-0 text-[#5c6f66]">
-                  Channel: <span className="font-semibold text-[#0d3d2e]">{channel}</span>
                 </p>
               </div>
 
@@ -110,20 +119,6 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
               >
                 Talk to sales
               </a>
-
-              <div className="mt-3 sm:mt-3.5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#4a5e56]">DELIVERED TO</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {deliveryChannels.map((ch) => (
-                    <span
-                      key={ch}
-                      className="inline-flex rounded-full border border-[#0d3d2e]/12 bg-[#f4f7f5] px-2.5 py-1 text-[10px] font-medium text-[#0d3d2e]"
-                    >
-                      {ch}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </article>
