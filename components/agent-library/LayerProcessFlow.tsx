@@ -10,8 +10,10 @@ function Arrow() {
 
 export function LayerProcessFlow() {
   return (
-    <div className="flex flex-wrap items-center gap-2" aria-label="Choose agents, monitor risks, alert owners">
-      <p className="mr-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#5c6f66]">Workflow</p>
+    <div className="flex flex-wrap items-center gap-2 sm:gap-2.5" aria-label="Choose agents, monitor risks, alert owners">
+      <p className="mr-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#5c6f66] sm:mr-2 sm:text-[10px]">
+        Workflow
+      </p>
       <div className="inline-flex items-center rounded-full border border-[#0d3d2e]/12 bg-white px-3 py-1.5">
         <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#0d3d2e]">Choose agents</span>
       </div>

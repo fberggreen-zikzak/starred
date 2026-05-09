@@ -50,46 +50,46 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
   const channel = severity === "High" ? "Slack + Email" : "Email + Dashboard";
 
   return (
-    <aside className="flex w-full shrink-0 flex-col border-l border-[#0d3d2e]/12 bg-[#e8edea] lg:w-[min(100%,400px)] xl:w-[430px]">
-      <div className="shrink-0 border-b border-[#0d3d2e]/12 bg-[#f2f5f3] px-5 py-4 sm:px-7 sm:py-5">
+    <aside className="flex w-full shrink-0 flex-col border-t border-[#0d3d2e]/12 bg-[#e8edea] lg:w-[360px] lg:border-l lg:border-t-0 xl:w-[390px]">
+      <div className="shrink-0 border-b border-[#0d3d2e]/12 bg-[#f2f5f3] px-4 py-3.5 sm:px-7 sm:py-5">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2a9d78]">LIVE</p>
-        <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#5c6f66]">What you receive</p>
-        <h3 className="mt-1 text-lg font-semibold tracking-tight text-[#0d3d2e] sm:text-xl">Alert preview</h3>
+        <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#5c6f66] sm:text-[10px]">What you receive</p>
+        <h3 className="mt-1 text-[17px] font-semibold tracking-tight text-[#0d3d2e] sm:text-xl">Alert preview</h3>
         <p className="mt-1.5 max-w-[44ch] text-[11px] leading-snug text-[#3d5249] sm:text-xs">
           See what Starred sends when a subscribed agent detects a risk.
         </p>
       </div>
 
-      <div className="flex min-h-[380px] flex-1 flex-col overflow-y-auto bg-[#dfe8e4]/5 px-4 py-3 sm:px-6 sm:py-4">
-        <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#0d3d2e]/55">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-[#dfe8e4]/5 px-3.5 py-3 sm:min-h-[380px] sm:px-6 sm:py-4">
+        <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#0d3d2e]/55 sm:mb-2.5 sm:text-[10px] sm:tracking-[0.14em]">
           SELECTED AGENT
         </p>
-        <p className="mb-3.5 text-[13px] font-semibold text-[#0d3d2e]">{fullAgentName}</p>
+        <p className="mb-3 text-[12px] font-semibold text-[#0d3d2e] sm:mb-3.5 sm:text-[13px]">{fullAgentName}</p>
 
-        <article className="relative flex-1 rounded-xl border border-[#0d3d2e]/12 bg-white px-4 py-4 shadow-[0_8px_24px_rgba(13,61,46,0.07)] sm:px-5 sm:py-4.5">
+        <article className="relative flex-1 rounded-xl border border-[#0d3d2e]/12 bg-white px-3.5 py-3.5 shadow-[0_8px_24px_rgba(13,61,46,0.07)] sm:px-5 sm:py-4.5">
           <span className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-full bg-[#5dbea5]/75" aria-hidden />
 
           <div className="flex h-full flex-col pl-2.5">
             <div className="flex items-start justify-between gap-2">
-              <h4 className="text-[16px] font-semibold leading-snug tracking-tight text-[#0d3d2e]">{title}</h4>
+              <h4 className="text-[15px] font-semibold leading-snug tracking-tight text-[#0d3d2e] sm:text-[16px]">{title}</h4>
               <span className="shrink-0 rounded-full bg-[#fdf6e8] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[#6a5220] ring-1 ring-[#e8d4a8]/55">
                 {severity}
               </span>
             </div>
 
-            <p className="mt-2.5 text-[13px] leading-relaxed text-[#3d5249]">{description}</p>
+            <p className="mt-2 text-[12px] leading-relaxed text-[#3d5249] sm:mt-2.5 sm:text-[13px]">{description}</p>
 
-            <div className="mt-3.5 rounded-lg border border-[#0d3d2e]/10 bg-[#f8faf9] px-3.5 py-3">
+            <div className="mt-3 rounded-lg border border-[#0d3d2e]/10 bg-[#f8faf9] px-3 py-2.5 sm:mt-3.5 sm:px-3.5 sm:py-3">
               <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#1f6b52]">WHY IT MATTERS</p>
-              <p className="mt-1.5 text-[12px] leading-relaxed text-[#0d3d2e]/90">{whyItMatters}</p>
+              <p className="mt-1.5 text-[11px] leading-relaxed text-[#0d3d2e]/90 sm:text-[12px]">{whyItMatters}</p>
             </div>
 
-            <div className="mt-3 rounded-lg border border-[#5dbea5]/28 bg-[#e8f7f1]/55 px-3.5 py-3">
+            <div className="mt-2.5 rounded-lg border border-[#5dbea5]/28 bg-[#e8f7f1]/55 px-3 py-2.5 sm:mt-3 sm:px-3.5 sm:py-3">
               <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#1f6b52]">RECOMMENDED ACTION</p>
-              <p className="mt-1.5 text-[12px] leading-relaxed text-[#0d3d2e]/92">{recommendedAction}</p>
+              <p className="mt-1.5 text-[11px] leading-relaxed text-[#0d3d2e]/92 sm:text-[12px]">{recommendedAction}</p>
             </div>
 
-            <div className="mt-auto pt-4">
+            <div className="mt-auto pt-3 sm:pt-4">
               <div className="grid grid-cols-1 gap-2 border-t border-[#0d3d2e]/8 pt-3 text-[11px] sm:grid-cols-3 sm:gap-3">
                 <p className="min-w-0 text-[#5c6f66]">
                 Owner: <span className="font-semibold text-[#0d3d2e]">{owner}</span>
@@ -106,7 +106,7 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
         </article>
       </div>
 
-      <div className="shrink-0 space-y-4 border-t border-[#0d3d2e]/12 bg-[#dce5e0] px-5 py-3.5 sm:px-7">
+      <div className="shrink-0 space-y-4 border-t border-[#0d3d2e]/12 bg-[#dce5e0] px-4 py-3.5 sm:px-7">
         <a
           href={SALES_MAILTO}
           className="flex w-full items-center justify-center rounded-full border-2 border-[#0d3d2e]/16 bg-[#fafcfb] px-4 py-2.5 text-[11px] font-semibold text-[#0d3d2e] shadow-[0_1px_2px_rgba(13,61,46,0.06)] transition hover:border-[#0d3d2e]/24 hover:bg-white sm:text-xs"

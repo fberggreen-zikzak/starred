@@ -32,16 +32,18 @@ export function AgentLibrary({
 }: Props) {
   const [active, setActive] = useState(0);
   const baseTabClass =
-    "rounded-full border px-3.5 py-1.5 text-left text-[11px] font-semibold transition sm:px-4 sm:py-2 sm:text-xs";
+    "whitespace-nowrap rounded-full border px-3 py-1.5 text-left text-[10.5px] font-semibold transition sm:px-4 sm:py-2 sm:text-xs";
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div
-        className="flex w-full shrink-0 flex-wrap items-center gap-x-2 gap-y-2 border-b border-[#0d3d2e]/10 bg-[#f4f6f5] px-4 py-3 sm:px-6"
+        className="flex w-full shrink-0 items-center gap-2 overflow-x-auto border-b border-[#0d3d2e]/10 bg-[#f4f6f5] px-3 py-3 sm:flex-wrap sm:overflow-visible sm:px-6"
         role="tablist"
         aria-label="Agent categories"
       >
-        <p className="mr-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5c6f66]">Categories</p>
+        <p className="mr-1 shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#5c6f66] sm:mr-2 sm:text-[10px] sm:tracking-[0.14em]">
+          Categories
+        </p>
         {agentCategories.map((cat, i) => {
           const selected = active === i;
           return (
@@ -77,7 +79,7 @@ export function AgentLibrary({
           aria-controls="panel-all"
           onClick={() => setActive(ALL_TAB)}
           className={[
-            `${baseTabClass} ml-auto shrink-0`,
+            `${baseTabClass} ml-1 shrink-0 sm:ml-auto`,
             active === ALL_TAB
               ? "border-[#0d3d2e]/6 bg-[#0d3d2e] text-white shadow-[0_2px_8px_rgba(13,61,46,0.16)]"
               : "border-[#0d3d2e]/14 bg-white text-[#0d3d2e]/78 hover:border-[#0d3d2e]/24 hover:bg-white hover:text-[#0d3d2e]",
