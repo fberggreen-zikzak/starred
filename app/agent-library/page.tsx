@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { AnchorSections } from "@/components/agent-library/AnchorSections";
 import { AnnouncementBar } from "@/components/agent-library/AnnouncementBar";
 import { Header } from "@/components/agent-library/Header";
 import { Hero } from "@/components/agent-library/Hero";
-import { pageShellClass } from "@/components/agent-library/layout";
-import { ProcessSection } from "@/components/agent-library/ProcessSection";
+import { SiteFooter } from "@/components/agent-library/SiteFooter";
 
 const sans = Inter({
   subsets: ["latin"],
@@ -15,7 +13,7 @@ const sans = Inter({
 export const metadata: Metadata = {
   title: "Starred | Agent Library",
   description:
-    "Subscribe to agents that watch hiring and workforce risks. Monitoring, alerts, and clear next steps for TA and People teams.",
+    "Pick the signals that matter. Specialist agents monitor hiring, workforce, and compliance signals — alerts before issues grow.",
 };
 
 export default function AgentLibraryPage() {
@@ -25,14 +23,8 @@ export default function AgentLibraryPage() {
       <Header />
       <main>
         <Hero />
-        <ProcessSection />
-        <AnchorSections />
       </main>
-      <footer className="border-t border-[#0d3d2e]/10 bg-white py-12 text-center text-xs text-[#6b7f76]">
-        <div className={pageShellClass}>
-          <p>© {new Date().getFullYear()} Starred. Hiring intelligence for operational clarity.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

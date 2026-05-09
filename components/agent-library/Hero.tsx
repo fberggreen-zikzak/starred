@@ -1,7 +1,5 @@
-import Link from "next/link";
 import { AgentLibraryPreview } from "./AgentLibraryPreview";
 import { pageShellClass } from "./layout";
-import { StoryFlow } from "./StoryFlow";
 
 export function Hero() {
   return (
@@ -17,41 +15,28 @@ export function Hero() {
             "radial-gradient(ellipse 55% 45% at 0% 0%, rgba(93, 190, 165, 0.09), transparent 50%), radial-gradient(ellipse 40% 35% at 100% 10%, rgba(13, 61, 46, 0.04), transparent 45%), #f4f6f4",
         }}
       />
-      <div className={`${pageShellClass} pb-20 pt-14 sm:pb-24 sm:pt-16 lg:pb-28 lg:pt-20`}>
-        <div className="grid items-start gap-14 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16 xl:grid-cols-[minmax(0,28rem)_minmax(0,1fr)] xl:gap-20 2xl:gap-24">
-          <div className="max-w-xl lg:pt-4">
-            <p className="inline-flex rounded-full bg-[#e8f7f1] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0d3d2e] ring-1 ring-[#5dbea5]/35">
+      <div className={`${pageShellClass} pb-10 pt-8 sm:pb-12 sm:pt-10 lg:pb-14 lg:pt-12`}>
+        <div className="flex flex-col gap-7 sm:gap-8 lg:gap-9">
+          <div className="mx-auto flex w-full max-w-[56rem] flex-col items-center text-center">
+            <p className="inline-flex rounded-full bg-[#e8f7f1] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#0d3d2e] ring-1 ring-[#5dbea5]/30 sm:text-[11px]">
               Hiring intelligence
             </p>
-            <h1 className="mt-6 text-pretty text-[2rem] font-semibold leading-[1.16] tracking-[-0.02em] text-[#0d3d2e] sm:text-[2.25rem] lg:text-[2.5rem] lg:leading-[1.12]">
-              Subscribe to the agents that watch your hiring and workforce risks.
+            <h1 className="mt-3.5 w-full text-[#0d3d2e] sm:mt-4">
+              <span className="block text-balance text-[2rem] font-semibold leading-[1.12] tracking-[-0.025em] sm:text-[2.35rem] lg:text-[2.85rem] lg:leading-[1.08]">
+                Choose what Starred should <span className="text-[#2a9d78]">watch</span> for you.
+              </span>
             </h1>
-            <div className="mt-6 h-0.5 w-12 rounded-full bg-[#5dbea5]" aria-hidden />
-            <p className="mt-6 text-pretty text-base leading-[1.7] text-[#3d5249] sm:text-[1.0625rem]">
-              Choose the insight agents you care about. Starred monitors each signal continuously and alerts the right
-              people when action is needed.
-            </p>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-              <Link
-                href="#agents"
-                className="inline-flex h-12 items-center justify-center rounded-full bg-[#0d3d2e] px-8 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(13,61,46,0.2)] transition hover:bg-[#0a3226]"
-              >
-                Explore agents
-              </Link>
-              <Link
-                href="#solutions"
-                className="inline-flex h-12 items-center justify-center rounded-full border border-[#0d3d2e]/15 bg-white px-6 text-sm font-semibold text-[#0d3d2e] shadow-sm transition hover:border-[#5dbea5]/5 hover:bg-[#fafcfb]"
-              >
-                See how it works
-              </Link>
-            </div>
-            <p className="mt-10 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6b7f76]">
-              Built for modern TA and People teams
+            <div
+              className="mx-auto mt-3.5 h-px w-11 rounded-full bg-gradient-to-r from-[#5dbea5] via-[#5dbea5]/80 to-transparent sm:mt-4"
+              aria-hidden
+            />
+            <p className="mx-auto mt-3.5 max-w-[50rem] text-balance text-pretty text-[0.9375rem] leading-[1.5] text-[#3d5249] sm:mt-4 sm:text-[1.05rem] lg:text-[1.15rem] lg:leading-snug">
+              Subscribe to specialist agents that monitor hiring, workforce, and compliance risks — and alert the right
+              owner when action is needed.
             </p>
           </div>
 
-          <div className="relative min-w-0 lg:-mr-2 xl:-mr-4 2xl:-mr-6">
-            <StoryFlow />
+          <div id="solutions" className="relative min-w-0 w-full scroll-mt-24">
             <AgentLibraryPreview />
           </div>
         </div>

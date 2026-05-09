@@ -11,7 +11,7 @@ export function AnnouncementBar() {
           Benchmark hiring signals and act before risks compound.
         </p>
         <Link
-          href="#resources"
+          href="#solutions"
           className="shrink-0 text-[11px] font-semibold text-[#0d3d2e] underline decoration-[#5dbea5]/50 underline-offset-4 transition hover:decoration-[#5dbea5] sm:text-xs"
         >
           Read now →
