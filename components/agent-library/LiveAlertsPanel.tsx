@@ -103,29 +103,30 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
                   Channel: <span className="font-semibold text-[#0d3d2e]">{channel}</span>
                 </p>
               </div>
+
+              <a
+                href={SALES_MAILTO}
+                className="mt-3 flex w-full items-center justify-center rounded-full border-2 border-[#0d3d2e]/16 bg-[#fafcfb] px-4 py-2.5 text-[11px] font-semibold text-[#0d3d2e] shadow-[0_1px_2px_rgba(13,61,46,0.06)] transition hover:border-[#0d3d2e]/24 hover:bg-white sm:mt-3.5 sm:text-xs"
+              >
+                Talk to sales
+              </a>
+
+              <div className="mt-3 sm:mt-3.5">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#4a5e56]">DELIVERED TO</p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {deliveryChannels.map((ch) => (
+                    <span
+                      key={ch}
+                      className="inline-flex rounded-full border border-[#0d3d2e]/12 bg-[#f4f7f5] px-2.5 py-1 text-[10px] font-medium text-[#0d3d2e]"
+                    >
+                      {ch}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </article>
-      </div>
-
-      <div className="shrink-0 space-y-4 border-t border-[#0d3d2e]/12 bg-[#dce5e0] px-4 py-3.5 sm:px-7">
-        <a
-          href={SALES_MAILTO}
-          className="flex w-full items-center justify-center rounded-full border-2 border-[#0d3d2e]/16 bg-[#fafcfb] px-4 py-2.5 text-[11px] font-semibold text-[#0d3d2e] shadow-[0_1px_2px_rgba(13,61,46,0.06)] transition hover:border-[#0d3d2e]/24 hover:bg-white sm:text-xs"
-        >
-          Talk to sales
-        </a>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#4a5e56]">DELIVERED TO</p>
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {deliveryChannels.map((ch) => (
-            <span
-              key={ch}
-              className="inline-flex rounded-full border border-[#0d3d2e]/12 bg-[#f4f7f5] px-2.5 py-1 text-[10px] font-medium text-[#0d3d2e]"
-            >
-              {ch}
-            </span>
-          ))}
-        </div>
       </div>
     </aside>
   );
