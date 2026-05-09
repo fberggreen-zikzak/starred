@@ -66,25 +66,27 @@ export function LiveAlertsPanel({ selectedAgentId }: Props) {
         </p>
         <p className="mb-3 text-[12px] font-semibold text-[#0d3d2e] sm:mb-3.5 sm:text-[13px]">{fullAgentName}</p>
 
-        <article className="relative flex-1 rounded-xl border border-[#0d3d2e]/12 bg-white px-3.5 py-3.5 shadow-[0_8px_24px_rgba(13,61,46,0.07)] sm:px-5 sm:py-4.5">
+        <article className="relative flex-1 rounded-xl border border-[#0d3d2e]/12 bg-white px-3.5 py-3.5 shadow-[0_2px_8px_rgba(13,61,46,0.05)] transition hover:shadow-[0_10px_26px_rgba(13,61,46,0.1)] sm:px-5 sm:py-4.5">
           <span className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-full bg-[#5dbea5]/75" aria-hidden />
 
           <div className="flex h-full flex-col pl-2.5">
             <div className="flex items-start justify-between gap-2">
               <h4 className="text-[15px] font-semibold leading-snug tracking-tight text-[#0d3d2e] sm:text-[16px]">{title}</h4>
-              <span className="shrink-0 rounded-full bg-[#fdf6e8] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[#6a5220] ring-1 ring-[#e8d4a8]/55">
+              <span className="shrink-0 rounded-full bg-[#fdf6e8] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[#6a5220] ring-1 ring-[#e8d4a8]/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]">
                 {severity}
               </span>
             </div>
 
             <p className="mt-2 text-[12px] leading-relaxed text-[#3d5249] sm:mt-2.5 sm:text-[13px]">{description}</p>
 
-            <div className="mt-3 rounded-lg border border-[#0d3d2e]/10 bg-[#f8faf9] px-3 py-2.5 sm:mt-3.5 sm:px-3.5 sm:py-3">
+            <div className="mt-2.5 h-px w-full bg-gradient-to-r from-[#0d3d2e]/12 to-transparent" aria-hidden />
+
+            <div className="mt-2.5 rounded-lg border border-[#0d3d2e]/10 bg-[#f8faf9] px-3 py-2.5 sm:mt-3.5 sm:px-3.5 sm:py-3">
               <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#1f6b52]">WHY IT MATTERS</p>
               <p className="mt-1.5 text-[11px] leading-relaxed text-[#0d3d2e]/90 sm:text-[12px]">{whyItMatters}</p>
             </div>
 
-            <div className="mt-2.5 rounded-lg border border-[#5dbea5]/28 bg-[#e8f7f1]/55 px-3 py-2.5 sm:mt-3 sm:px-3.5 sm:py-3">
+            <div className="mt-2.5 rounded-lg border border-[#5dbea5]/30 bg-[#e8f7f1]/55 px-3 py-2.5 sm:mt-3 sm:px-3.5 sm:py-3">
               <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#1f6b52]">RECOMMENDED ACTION</p>
               <p className="mt-1.5 text-[11px] leading-relaxed text-[#0d3d2e]/92 sm:text-[12px]">{recommendedAction}</p>
             </div>
